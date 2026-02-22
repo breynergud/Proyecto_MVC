@@ -8,11 +8,11 @@ class AmbienteModel
 
     private $db;
 
-    public function __construct($amb_id, $amb_nombre, $sede_sede_id)
+    public function __construct($amb_id = null, $amb_nombre = null, $sede_sede_id = null)
     {
-        $this->setAmbId($amb_id);
-        $this->setAmbnombre($amb_nombre);
-        $this->setSedeSedeId($sede_sede_id);
+        if ($amb_id !== null) $this->setAmbId($amb_id);
+        if ($amb_nombre !== null) $this->setAmbnombre($amb_nombre);
+        if ($sede_sede_id !== null) $this->setSedeSedeId($sede_sede_id);
         $this->db = Conexion::getConnect();
     }
     //getters 
@@ -46,29 +46,14 @@ class AmbienteModel
     //crud
     public function create()
     {
-        try {
-            // Primero intentamos sin el ID (asumiendo SERIAL)
-            $query = "INSERT INTO ambiente (amb_nombre, sede_sede_id) VALUES (:amb_nombre, :sede)";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':amb_nombre', $this->amb_nombre);
-            $stmt->bindParam(':sede', $this->sede_sede_id);
-            $stmt->execute();
-            return $this->db->lastInsertId();
-        } catch (PDOException $e) {
-            // Si falla por restricción not-null en amb_id, es que no es SERIAL
-            if ($e->getCode() == '23502') {
-                // Intentamos obtener el siguiente ID manualmente
-                $maxId = $this->db->query("SELECT COALESCE(MAX(CAST(amb_id AS INTEGER)), 0) + 1 FROM ambiente")->fetchColumn();
-                $query = "INSERT INTO ambiente (amb_id, amb_nombre, sede_sede_id) VALUES (:id, :amb_nombre, :sede)";
-                $stmt = $this->db->prepare($query);
-                $stmt->bindParam(':id', $maxId);
-                $stmt->bindParam(':amb_nombre', $this->amb_nombre);
-                $stmt->bindParam(':sede', $this->sede_sede_id);
-                $stmt->execute();
-                return $maxId;
-            }
-            throw $e;
-        }
+        // amb_id es VARCHAR(5) y PK, debe ser proporcionado
+        $query = "INSERT INTO ambiente (amb_id, amb_nombre, sede_sede_id) VALUES (:amb_id, :amb_nombre, :sede)";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':amb_id', $this->amb_id);
+        $stmt->bindParam(':amb_nombre', $this->amb_nombre);
+        $stmt->bindParam(':sede', $this->sede_sede_id);
+        $stmt->execute();
+        return $this->amb_id; // Retornamos el ID insertado
     }
     public function read()
     {
@@ -76,6 +61,8 @@ class AmbienteModel
                 FROM ambiente a 
                 INNER JOIN sede s ON a.sede_sede_id = s.sede_id 
                 WHERE a.sede_sede_id = :sede";
+        // Nota: El método read() original filtraba por sede_id, lo mantengo así aunque el nombre sugiera leer uno solo.
+        // Si se quiere leer por ID, se usa readById
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':sede' => $this->sede_sede_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -85,7 +72,8 @@ class AmbienteModel
     {
         $sql = "SELECT a.*, s.sede_nombre 
                 FROM ambiente a 
-                INNER JOIN sede s ON a.sede_sede_id = s.sede_id";
+                INNER JOIN sede s ON a.sede_sede_id = s.sede_id
+                ORDER BY a.amb_nombre ASC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -103,6 +91,7 @@ class AmbienteModel
     }
     public function update()
     {
+        // No actualizamos la PK amb_id, usamos la actual para buscar
         $query = "UPDATE ambiente SET amb_nombre = :amb_nombre, sede_sede_id = :sede WHERE amb_id = :id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':amb_nombre', $this->amb_nombre);
@@ -118,5 +107,14 @@ class AmbienteModel
         $stmt->bindParam(':id', $this->amb_id);
         $stmt->execute();
         return $stmt;
+    }
+
+    public function exists($id)
+    {
+        $query = "SELECT COUNT(*) as count FROM ambiente WHERE amb_id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([':id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'] > 0;
     }
 }

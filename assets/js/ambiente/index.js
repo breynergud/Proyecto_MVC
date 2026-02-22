@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         badge.innerHTML = `
             Filtrando por: ${sedeName}
             <button onclick="window.location.href='index.php'" class="hover:text-green-700 transition-colors">
-                <ion-icon src="../../assets/ionicons/close-outline.svg"></ion-icon>
+                <i class="fa-solid fa-xmark"></i>
             </button>
         `;
 
@@ -97,6 +97,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td class="font-semibold text-sena-green">${String(a.amb_id).padStart(3, '0')}</td>
                     <td class="font-medium group-hover:text-sena-green transition-colors">${a.amb_nombre}</td>
                     <td>${a.sede_nombre || 'N/A'}</td>
+                    <td class="text-center">
+                        <div class="flex items-center justify-center gap-2">
+                             <a href="editar.php?id=${a.amb_id}" class="w-8 h-8 rounded-full bg-white dark:bg-slate-700 shadow-sm flex items-center justify-center text-slate-400 hover:text-sena-orange transition-all" title="Editar" onclick="event.stopPropagation()">
+                                <i class="fa-solid fa-pen-to-square text-sm"></i>
+                            </a>
+                            <button class="w-8 h-8 rounded-full bg-white dark:bg-slate-700 shadow-sm flex items-center justify-center text-slate-400 hover:text-red-500 transition-all" title="Eliminar" onclick="event.stopPropagation(); window.openDeleteModal('${a.amb_id}', '${a.amb_nombre}')">
+                                <i class="fa-solid fa-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </td>
                 `;
                 tableBody.appendChild(tr);
             });

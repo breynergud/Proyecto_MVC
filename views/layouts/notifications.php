@@ -5,7 +5,7 @@
         <div id="error-alert" class="hidden">
             <div class="modal-header bg-red-50 border-b border-red-100 p-6 flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center flex-shrink-0">
-                    <ion-icon src="../../assets/ionicons/alert-circle-outline.svg" class="text-3xl"></ion-icon>
+                    <i class="fa-solid fa-circle-exclamation text-3xl"></i>
                 </div>
                 <div>
                     <h3 class="text-lg font-bold text-gray-900">Atención detectada</h3>
@@ -31,7 +31,7 @@
         <div id="success-alert" class="hidden">
             <div class="modal-header bg-green-50 border-b border-green-100 p-6 flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center flex-shrink-0">
-                    <ion-icon src="../../assets/ionicons/checkmark-circle-outline.svg" class="text-3xl"></ion-icon>
+                    <i class="fa-solid fa-file-circle-check text-3xl"></i>
                 </div>
                 <div>
                     <h3 class="text-lg font-bold text-gray-900">Operación exitosa</h3>

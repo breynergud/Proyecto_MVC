@@ -2,7 +2,7 @@
 $pageTitle = 'Registrar Título - SENA';
 $activeNavItem = 'titulos';
 require_once '../layouts/head.php';
-require_once '../layouts/sidebar.php';
+require_once '../layouts/sidebar-green.php';
 ?>
 
 <!-- Main Content -->
@@ -11,10 +11,10 @@ require_once '../layouts/sidebar.php';
     <header class="main-header">
         <div class="header-content">
             <nav class="breadcrumb">
-                <a href="#">Inicio</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                <a href="../dashboard/index.php">Inicio</a>
+                <i class="fa-solid fa-chevron-right"></i>
                 <a href="index.php">Títulos</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                <i class="fa-solid fa-chevron-right"></i>
                 <span>Crear</span>
             </nav>
             <h1 class="page-title">Registrar Nuevo Título</h1>
@@ -22,7 +22,7 @@ require_once '../layouts/sidebar.php';
 
         <div class="header-actions">
             <a href="index.php" class="btn-secondary">
-                <ion-icon src="../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+                <i class="fa-solid fa-arrow-left"></i>
                 Volver
             </a>
         </div>
@@ -33,7 +33,7 @@ require_once '../layouts/sidebar.php';
         <div class="form-card">
             <div class="form-header">
                 <div class="form-icon">
-                    <ion-icon src="../../assets/ionicons/ribbon-outline.svg"></ion-icon>
+                    <i class="fa-solid fa-certificate"></i>
                 </div>
                 <div>
                     <h2>Información del Título</h2>
@@ -60,11 +60,11 @@ require_once '../layouts/sidebar.php';
 
                 <div class="form-actions">
                     <a href="index.php" class="btn-secondary">
-                        <ion-icon src="../../assets/ionicons/close-circle-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-circle-xmark"></i>
                         Cancelar
                     </a>
                     <button type="submit" class="btn-primary">
-                        <ion-icon src="../../assets/ionicons/save-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-floppy-disk"></i>
                         Guardar Título
                     </button>
                 </div>
@@ -74,8 +74,8 @@ require_once '../layouts/sidebar.php';
         <!-- Info Card -->
         <div class="info-card">
             <div class="info-header">
-                <ion-icon src="../../assets/ionicons/information-circle-outline.svg"></ion-icon>
-                <h3>Recomendaciones</h3>
+                <i class="fa-solid fa-circle-info"></i>
+                <h3>Información Importante</h3>
             </div>
             <div class="info-content">
                 <ul>

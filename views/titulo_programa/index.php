@@ -2,7 +2,7 @@
 $pageTitle = 'Gestión de Títulos - SENA';
 $activeNavItem = 'titulos';
 require_once '../layouts/head.php';
-require_once '../layouts/sidebar.php';
+require_once '../layouts/sidebar-green.php';
 ?>
 
 <!-- Main Content -->
@@ -11,41 +11,25 @@ require_once '../layouts/sidebar.php';
     <header class="main-header">
         <div class="header-content">
             <nav class="breadcrumb">
-                <a href="#">Inicio</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
-                <span>Títulos de Programa</span>
+                <a href="../dashboard/index.php">Inicio</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span class="active">Títulos de Programas</span>
             </nav>
             <h1 class="page-title">Administración de Títulos</h1>
         </div>
     </header>
 
     <div class="content-wrapper">
-        <!-- Stats Card -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <span class="stat-card-label">TOTAL DE TÍTULOS</span>
-                    <div class="stat-card-icon green">
-                        <ion-icon src="../../assets/ionicons/ribbon-outline.svg"></ion-icon>
-                    </div>
-                </div>
-                <div class="stat-card-body">
-                    <span class="stat-card-number" id="totalTitulos">0</span>
-                    <span class="stat-card-desc">títulos registrados</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Action Bar -->
-        <div class="action-bar">
+        <!-- Action Bar - Solo búsqueda -->
+        <!-- Action Bar - Búsqueda y Registro -->
+        <div class="action-bar-simple" style="display: flex; justify-content: space-between; align-items: center;">
             <div class="search-container">
-                <ion-icon src="../../assets/ionicons/search-outline.svg" class="search-icon"></ion-icon>
-                <input type="text" id="searchInput" placeholder="Buscar por nombre de título..." class="search-input">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Buscar títulos...">
             </div>
-
             <a href="crear.php" class="btn-primary">
-                <ion-icon src="../../assets/ionicons/add-outline.svg"></ion-icon>
-                Registrar Título
+                <i class="fa-solid fa-plus"></i>
+                Nuevo Título
             </a>
         </div>
 
@@ -70,14 +54,17 @@ require_once '../layouts/sidebar.php';
                 </div>
                 <nav class="pagination">
                     <button class="pagination-btn" id="prevBtn">
-                        <ion-icon src="../../assets/ionicons/chevron-back-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-chevron-left"></i>
                     </button>
                     <div id="paginationNumbers"></div>
                     <button class="pagination-btn" id="nextBtn">
-                        <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </nav>
             </div>
+            
+            <!-- Botón Registrar debajo de la tabla -->
+            <!-- Botón Registrar movido al inicio -->
         </div>
     </div>
 </main>
@@ -87,9 +74,9 @@ require_once '../layouts/sidebar.php';
     <div class="modal-content">
         <div class="modal-header">
             <h3>Confirmar Eliminación</h3>
-            <button class="modal-close" onclick="closeDeleteModal()">
-                <ion-icon src="../../assets/ionicons/close-outline.svg"></ion-icon>
-            </button>
+            <span class="close-btn" id="closeDeleteModal">
+                <i class="fa-solid fa-xmark"></i>
+            </span>
         </div>
         <div class="modal-body">
             <p>¿Está seguro que desea eliminar el título <strong id="tituloToDelete"></strong>?</p>

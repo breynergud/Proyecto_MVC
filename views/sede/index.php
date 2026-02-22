@@ -2,7 +2,7 @@
 $pageTitle = 'Gestión de Sedes - SENA';
 $activeNavItem = 'sedes';
 require_once '../layouts/head.php';
-require_once '../layouts/sidebar.php';
+require_once '../layouts/sidebar-green.php';
 ?>
 
 <!-- Main Content -->
@@ -12,7 +12,7 @@ require_once '../layouts/sidebar.php';
         <div class="header-content">
             <nav class="breadcrumb">
                 <a href="#">Inicio</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                <i class="fa-solid fa-chevron-right"></i>
                 <span>Sedes</span>
             </nav>
             <h1 class="page-title">Administración de Sedes</h1>
@@ -24,31 +24,15 @@ require_once '../layouts/sidebar.php';
     </header>
 
     <div class="content-wrapper">
-        <!-- Stats Card -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <span class="stat-card-label">TOTAL DE SEDES</span>
-                    <div class="stat-card-icon green">
-                        <ion-icon src="../../assets/ionicons/business-outline.svg"></ion-icon>
-                    </div>
-                </div>
-                <div class="stat-card-body">
-                    <span class="stat-card-number" id="totalSedes">0</span>
-                    <span class="stat-card-desc">sedes registradas</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Action Bar -->
-        <div class="action-bar">
+        <!-- Action Bar - Solo búsqueda -->
+        <!-- Action Bar - Búsqueda y Registro -->
+        <div class="action-bar-simple" style="display: flex; justify-content: space-between; align-items: center;">
             <div class="search-container">
-                <ion-icon src="../../assets/ionicons/search-outline.svg" class="search-icon"></ion-icon>
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input type="text" id="searchInput" placeholder="Buscar por nombre de sede..." class="search-input">
             </div>
-
             <a href="crear.php" class="btn-primary">
-                <ion-icon src="../../assets/ionicons/add-outline.svg"></ion-icon>
+                <i class="fa-solid fa-plus"></i>
                 Registrar Sede
             </a>
         </div>
@@ -74,14 +58,17 @@ require_once '../layouts/sidebar.php';
                 </div>
                 <nav class="pagination">
                     <button class="pagination-btn" id="prevBtn">
-                        <ion-icon src="../../assets/ionicons/chevron-back-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-chevron-left"></i>
                     </button>
                     <div id="paginationNumbers"></div>
                     <button class="pagination-btn" id="nextBtn">
-                        <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </nav>
             </div>
+            
+            <!-- Botón Registrar debajo de la tabla -->
+            <!-- Botón Registrar movido al inicio -->
         </div>
     </div>
 </main>
@@ -92,7 +79,7 @@ require_once '../layouts/sidebar.php';
         <div class="modal-header">
             <h3>Confirmar Eliminación</h3>
             <button class="modal-close" onclick="closeDeleteModal()">
-                <ion-icon src="../../assets/ionicons/close-outline.svg"></ion-icon>
+                <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
         <div class="modal-body">

@@ -80,7 +80,7 @@ class VerPrograma {
 
     populateUI() {
         if (this.denominacionEl) this.denominacionEl.textContent = this.programaData.prog_denominacion;
-        if (this.idEl) this.idEl.textContent = String(this.programaData.prog_id).padStart(3, '0');
+        if (this.idEl) this.idEl.textContent = String(this.programaData.prog_codigo).padStart(3, '0');
         if (this.codigoValEl) this.codigoValEl.textContent = this.programaData.prog_codigo;
         if (this.tituloEl) this.tituloEl.textContent = this.programaData.titpro_nombre || 'No asignado';
         if (this.tipoEl) {

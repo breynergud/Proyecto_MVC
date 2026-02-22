@@ -13,29 +13,29 @@ $activeNavItem = isset($activeNavItem) ? $activeNavItem : 'sedes';
     <nav class="sidebar-nav">
         <p class="nav-section">Principal</p>
         <a href="../dashboard/index.php" class="nav-item <?php echo ($activeNavItem === 'dashboard') ? 'active' : ''; ?>">
-            <ion-icon src="../../assets/ionicons/grid-outline.svg"></ion-icon>
+            <i class="fa-solid fa-table-cells-large"></i>
             Dashboard
         </a>
 
         <p class="nav-section">Gestión</p>
         <a href="../sede/index.php" class="nav-item <?php echo ($activeNavItem === 'sedes') ? 'active' : ''; ?>">
-            <ion-icon src="../../assets/ionicons/business-outline.svg"></ion-icon>
+            <i class="fa-solid fa-building"></i>
             Sedes
         </a>
         <a href="../ambiente/index.php" class="nav-item <?php echo ($activeNavItem === 'ambientes') ? 'active' : ''; ?>">
-            <ion-icon src="../../assets/ionicons/cube-outline.svg"></ion-icon>
+            <i class="fa-solid fa-cube"></i>
             Ambientes
         </a>
         <a href="../programa/index.php" class="nav-item <?php echo ($activeNavItem === 'programas') ? 'active' : ''; ?>">
-            <ion-icon src="../../assets/ionicons/school-outline.svg"></ion-icon>
+            <i class="fa-solid fa-graduation-cap"></i>
             Programas
         </a>
         <a href="../titulo_programa/index.php" class="nav-item <?php echo ($activeNavItem === 'titulos') ? 'active' : ''; ?>">
-            <ion-icon src="../../assets/ionicons/ribbon-outline.svg"></ion-icon>
+            <i class="fa-solid fa-certificate"></i>
             Títulos de Programa
         </a>
         <a href="#" class="nav-item <?php echo ($activeNavItem === 'instructores') ? 'active' : ''; ?>">
-            <ion-icon src="../../assets/ionicons/people-outline.svg"></ion-icon>
+            <i class="fa-solid fa-chalkboard-user"></i>
             Instructores
         </a>
     </nav>
@@ -47,7 +47,7 @@ $activeNavItem = isset($activeNavItem) ? $activeNavItem : 'sedes';
                 <p class="profile-name">Carlos Rodriguez</p>
                 <p class="profile-role">Coordinador Académico</p>
             </div>
-            <ion-icon src="../../assets/ionicons/log-out-outline.svg"></ion-icon>
+            <i class="fa-solid fa-right-from-bracket"></i>
         </div>
     </div>
 </aside>

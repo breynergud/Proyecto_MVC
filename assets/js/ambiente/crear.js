@@ -24,6 +24,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     form.onsubmit = (e) => {
         e.preventDefault();
+        const ambId = document.getElementById('amb_id').value.trim();
+        if (ambId.length < 1 || ambId.length > 5) {
+            NotificationService.showError('El ID del ambiente debe tener entre 1 y 5 caracteres');
+            return;
+        }
+
         const formData = new FormData(form);
         formData.append('controller', 'ambiente');
         formData.append('action', 'store');

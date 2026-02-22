@@ -129,10 +129,10 @@ class SedeManager {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="3" class="text-center py-8">
-                        <div class="flex flex-col items-center">
-                            <ion-icon src="../../assets/ionicons/search-outline.svg" style="font-size:2rem;color:#9ca3af;margin-bottom:0.5rem;"></ion-icon>
-                            <p class="text-gray-500">No se encontraron sedes</p>
-                        </div>
+                        <div style="text-align: center; padding: 2rem;">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size:2rem;color:#9ca3af;margin-bottom:0.5rem;"></i>
+                    <p style="color: #6b7280;">No se encontraron sedes que coincidan con la búsqueda.</p>
+                </div>
                     </td>
                 </tr>
             `;

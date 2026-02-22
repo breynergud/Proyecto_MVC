@@ -2,7 +2,7 @@
 $pageTitle = 'Registrar Programa - SENA';
 $activeNavItem = 'programas';
 require_once '../layouts/head.php';
-require_once '../layouts/sidebar.php';
+require_once '../layouts/sidebar-green.php';
 ?>
 
 <!-- Main Content -->
@@ -11,18 +11,18 @@ require_once '../layouts/sidebar.php';
     <header class="main-header">
         <div class="header-content">
             <nav class="breadcrumb">
-                <a href="#">Inicio</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                <a href="../dashboard/index.php">Inicio</a>
+                <i class="fa-solid fa-chevron-right"></i>
                 <a href="index.php">Programas</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
-                <span>Crear</span>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span>Registrar</span>
             </nav>
             <h1 class="page-title">Registrar Nuevo Programa</h1>
         </div>
 
         <div class="header-actions">
             <a href="index.php" class="btn-secondary">
-                <ion-icon src="../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+                <i class="fa-solid fa-arrow-left"></i>
                 Volver
             </a>
         </div>
@@ -33,7 +33,7 @@ require_once '../layouts/sidebar.php';
         <div class="form-card">
             <div class="form-header">
                 <div class="form-icon">
-                    <ion-icon src="../../assets/ionicons/school-outline.svg"></ion-icon>
+                    <i class="fa-solid fa-graduation-cap"></i>
                 </div>
                 <div>
                     <h2>Información del Programa</h2>
@@ -67,14 +67,6 @@ require_once '../layouts/sidebar.php';
                     </div>
 
                     <div class="form-group full-width">
-                        <label for="sede_sede_id" class="form-label required">Sede a la que pertenece</label>
-                        <select id="sede_sede_id" name="sede_sede_id" class="form-input" required>
-                            <option value="" disabled selected>Cargando sedes...</option>
-                        </select>
-                        <div class="form-help">Seleccione el campus donde se impartirá principalmente este programa.</div>
-                    </div>
-
-                    <div class="form-group full-width">
                         <label for="tit_programa_titpro_id" class="form-label required">Título Académico que Otorga</label>
                         <select id="tit_programa_titpro_id" name="tit_programa_titpro_id" class="form-input" required>
                             <option value="" disabled selected>Cargando títulos...</option>
@@ -83,13 +75,29 @@ require_once '../layouts/sidebar.php';
                     </div>
                 </div>
 
+                <!-- Competencies Section -->
+                <div class="form-section mt-6 border-t pt-6">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Competencias del Programa</h3>
+                    <p class="text-sm text-gray-500 mb-4">Seleccione las competencias que se desarrollarán en este programa de formación.</p>
+                    
+                    <div id="loadingCompetencias" class="text-center py-4 text-gray-500">
+                        <i class="fa-solid fa-rotate animate-spin mr-2"></i>
+                        Cargando competencias...
+                    </div>
+
+                    <div id="competenciasContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto p-2 border rounded-md hidden">
+                        <!-- Competencies checkboxes will be loaded here -->
+                    </div>
+                    <div id="competenciasError" class="text-red-500 text-sm mt-2 hidden"></div>
+                </div>
+
                 <div class="form-actions">
                     <a href="index.php" class="btn-secondary">
-                        <ion-icon src="../../assets/ionicons/close-circle-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-circle-xmark"></i>
                         Cancelar
                     </a>
                     <button type="submit" class="btn-primary">
-                        <ion-icon src="../../assets/ionicons/save-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-floppy-disk"></i>
                         Guardar Programa
                     </button>
                 </div>
@@ -99,8 +107,8 @@ require_once '../layouts/sidebar.php';
         <!-- Info Card -->
         <div class="info-card">
             <div class="info-header">
-                <ion-icon src="../../assets/ionicons/information-circle-outline.svg"></ion-icon>
-                <h3>Información Adicional</h3>
+                <i class="fa-solid fa-circle-info"></i>
+                <h3>Información Importante</h3>
             </div>
             <div class="info-content">
                 <p>Al registrar un programa, podrá posteriormente asociarle competencias y resultados de aprendizaje específicos.</p>

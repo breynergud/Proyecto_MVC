@@ -12,8 +12,14 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) || (isset($_SERVER['HTTP_ACCEPT']) 
 $controllers = array(
     'sede' => ['index', 'show', 'store', 'update', 'destroy', 'getProgramas'],
     'ambiente' => ['index', 'show', 'store', 'update', 'destroy'],
-    'programa' => ['index', 'show', 'store', 'update', 'destroy', 'getTitulos'],
+    'competencia' => ['index', 'show', 'store', 'update', 'destroy'],
+    'programa' => ['index', 'show', 'store', 'update', 'destroy', 'getTitulos', 'getCompetencias', 'getCompetenciasDisponibles', 'asociarCompetencia', 'desasociarCompetencia', 'asociarCompetencias'],
     'titulo_programa' => ['index', 'show', 'store', 'update', 'destroy'],
+    'ficha' => ['index', 'show', 'store', 'update', 'destroy', 'getProgramas', 'getInstructores', 'getCoordinaciones'],
+    'instructor' => ['index', 'show', 'store', 'update', 'destroy'],
+    'asignacion' => ['index', 'store', 'destroy', 'getFichaInfo', 'getAsignacionesByFicha', 'getCompetenciasPendientes', 'getInstructoresByCompetencia'],
+    'coordinacion' => ['index', 'show', 'store', 'update', 'destroy', 'getCentros'],
+    'centro_formacion' => ['index', 'show', 'store', 'update', 'destroy'],
     // Agrega más controladores y acciones aquí si lo necesitas
 );
 
@@ -55,14 +61,46 @@ function call($controller, $action)
             require_once('model/SedeModel.php');
             $controllerObj = new AmbienteController();
             break;
+        case 'competencia':
+            require_once('model/CompetenciaModel.php');
+            $controllerObj = new CompetenciaController();
+            break;
         case 'programa':
             require_once('model/ProgramaModel.php');
             require_once('model/TituloProgramaModel.php');
+            require_once('model/CompetenciaProgramaModel.php');
+            require_once('model/CompetenciaModel.php');
             $controllerObj = new ProgramaController();
             break;
         case 'titulo_programa':
             require_once('model/TituloProgramaModel.php');
             $controllerObj = new TituloProgramaController();
+            break;
+        case 'ficha':
+            require_once('model/FichaModel.php');
+            require_once('model/ProgramaModel.php');
+            require_once('model/InstructorModel.php');
+            $controllerObj = new FichaController();
+            break;
+        case 'instructor':
+            require_once('model/InstructorModel.php');
+            $controllerObj = new InstructorController();
+            break;
+        case 'asignacion':
+            require_once('model/AsignacionModel.php');
+            require_once('model/FichaModel.php');
+            require_once('model/InstructorModel.php');
+            require_once('model/CompetenciaModel.php');
+            $controllerObj = new AsignacionController();
+            break;
+        case 'coordinacion':
+            require_once('model/CoordinacionModel.php');
+            require_once('model/CentroFormacionModel.php');
+            $controllerObj = new CoordinacionController();
+            break;
+        case 'centro_formacion':
+            require_once('model/CentroFormacionModel.php');
+            $controllerObj = new CentroFormacionController();
             break;
         default:
             http_response_code(404);

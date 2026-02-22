@@ -2,7 +2,7 @@
 $pageTitle = 'Detalle de Sede - SENA';
 $activeNavItem = 'sedes';
 require_once '../layouts/head.php';
-require_once '../layouts/sidebar.php';
+require_once '../layouts/sidebar-green.php';
 ?>
 
 <!-- Main Content -->
@@ -17,21 +17,21 @@ require_once '../layouts/sidebar.php';
                     </li>
                     <li>
                         <div class="flex items-center">
-                            <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg" class="text-base mx-1"></ion-icon>
+                            <i class="fa-solid fa-chevron-right text-base mx-1"></i>
                             <span class="text-slate-800 dark:text-white font-medium">Detalle de Sede</span>
                         </div>
                     </li>
                 </ol>
             </nav>
             <h1 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <ion-icon src="../../assets/ionicons/information-circle-outline.svg" class="text-2xl text-sena-orange"></ion-icon>
+                <i class="fa-solid fa-circle-info text-2xl text-sena-orange"></i>
                 Información Detallada
             </h1>
         </div>
 
         <div class="flex items-center gap-4">
             <a href="index.php" class="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-sena-orange transition-colors px-3 py-2 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/10 border border-transparent hover:border-sena-orange/20">
-                <ion-icon src="../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+                <i class="fa-solid fa-arrow-left"></i>
                 <span class="text-sm font-medium">Regresar</span>
             </a>
         </div>
@@ -70,7 +70,7 @@ require_once '../layouts/sidebar.php';
                             <div class="flex items-center justify-between mb-4">
                                 <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Datos del Registro</h4>
                                 <a href="#" id="editLink" class="text-sena-green hover:text-emerald-700 transition-colors flex items-center gap-1 text-sm font-medium">
-                                    <ion-icon src="../../assets/ionicons/create-outline.svg"></ion-icon>
+                                    <i class="fa-solid fa-pen-to-square"></i>
                                     Editar
                                 </a>
                             </div>
@@ -91,152 +91,17 @@ require_once '../layouts/sidebar.php';
                         </div>
                     </div>
 
-                    <!-- Coordinator Info -->
-                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-                        <div class="flex items-start gap-4">
-                            <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                                <ion-icon src="../../assets/ionicons/shield-checkmark-outline.svg" class="text-blue-600 dark:text-blue-400"></ion-icon>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-900 dark:text-white">Coordinador Encargado</h4>
-                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                                    Esta sede está actualmente bajo la supervisión de la coordinación académica central.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Coordinator Info removed -->
+
                 </div>
 
                 <!-- Right Column -->
                 <div class="lg:col-span-2 space-y-6">
-                    <!-- Statistics Cards -->
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
-                            <div class="p-3 rounded-full bg-orange-100 text-sena-orange dark:bg-orange-900/30">
-                                <ion-icon src="../../assets/ionicons/school-outline.svg"></ion-icon>
-                            </div>
-                            <div>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase">Programas</p>
-                                <p id="totalProgramas" class="text-xl font-bold text-slate-900 dark:text-white">0</p>
-                            </div>
-                        </div>
-                        <div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
-                            <div class="p-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30">
-                                <ion-icon src="../../assets/ionicons/cube-outline.svg"></ion-icon>
-                            </div>
-                            <div>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase">Ambientes</p>
-                                <p id="totalAmbientes" class="text-xl font-bold text-slate-900 dark:text-white">0</p>
-                            </div>
-                        </div>
-                        <div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
-                            <div class="p-3 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30">
-                                <ion-icon src="../../assets/ionicons/people-outline.svg"></ion-icon>
-                            </div>
-                            <div>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase">Instructores</p>
-                                <p id="totalInstructores" class="text-xl font-bold text-slate-900 dark:text-white">0</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Programs Card -->
-                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
-                        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
-                            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                <ion-icon src="../../assets/ionicons/layers-outline.svg" class="text-slate-400"></ion-icon>
-                                Programas Asociados
-                            </h3>
-                            <button id="verTodosProgramas" class="text-sm text-sena-green hover:text-green-700 font-medium transition-colors">Ver todos</button>
-                        </div>
-                        <div class="p-6">
-                            <!-- Preview Mode -->
-                            <div id="programasPreview">
-                                <div id="programasList" class="space-y-4">
-                                    <!-- Programs will be loaded here -->
-                                </div>
-                            </div>
-
-                            <!-- Full List Mode -->
-                            <div id="programasFullList" class="space-y-3" style="display: none;">
-                                <div class="flex justify-between items-center mb-4">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Total:</span>
-                                        <span id="totalProgramasCount" class="text-sm font-bold text-sena-green">0</span>
-                                        <span class="text-slate-400">|</span>
-                                        <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Filtrados:</span>
-                                        <span id="filteredProgramasCount" class="text-sm font-bold text-sena-orange">0</span>
-                                    </div>
-                                    <button id="volverProgramasPreview" class="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
-                                        <ion-icon src="../../assets/ionicons/close-outline.svg" class="text-sm"></ion-icon>
-                                    </button>
-                                </div>
-
-                                <!-- Filters -->
-                                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 mb-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <!-- Search by Name -->
-                                        <div class="relative">
-                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <ion-icon src="../../assets/ionicons/search-outline.svg" class="text-slate-400 text-sm"></ion-icon>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                id="searchPrograma"
-                                                placeholder="Buscar por nombre..."
-                                                class="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sena-green focus:border-sena-green transition duration-150 ease-in-out">
-                                        </div>
-
-                                        <!-- Filter by Nivel -->
-                                        <div class="relative">
-                                            <select
-                                                id="filterNivelPrograma"
-                                                class="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sena-green focus:border-sena-green transition duration-150 ease-in-out">
-                                                <option value="">Todos los niveles</option>
-                                            </select>
-                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                                <ion-icon src="../../assets/ionicons/chevron-down-outline.svg" class="text-slate-400 text-sm"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Active Filters Display -->
-                                    <div id="activeProgramaFilters" class="mt-3 flex flex-wrap gap-2" style="display: none;">
-                                        <span class="text-xs text-slate-500 dark:text-slate-400">Filtros activos:</span>
-                                        <div id="activeProgramaFiltersList" class="flex flex-wrap gap-1">
-                                        </div>
-                                        <button id="clearProgramaFilters" class="text-xs text-sena-orange hover:text-orange-600 font-medium transition-colors">
-                                            Limpiar filtros
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div id="programasListComplete" class="space-y-2 max-h-64 overflow-y-auto">
-                                    <!-- Full programs list will be loaded here -->
-                                </div>
-
-                                <!-- No Results State -->
-                                <div id="noProgramaFilterResults" class="text-center py-8" style="display: none;">
-                                    <ion-icon src="../../assets/ionicons/filter-outline.svg" class="text-gray-400 text-3xl mb-2"></ion-icon>
-                                    <p class="text-gray-500 text-sm">No se encontraron programas con los filtros aplicados</p>
-                                    <button id="clearProgramaFiltersBtn" class="mt-2 text-sm text-sena-green hover:text-green-700 font-medium">
-                                        Limpiar filtros
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div id="noProgramas" class="text-center py-8" style="display: none;">
-                                <ion-icon src="../../assets/ionicons/school-outline.svg" class="text-gray-400 text-4xl mb-2"></ion-icon>
-                                <p class="text-gray-500">No hay programas asignados a esta sede</p>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Ambientes Card -->
                     <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
                         <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
                             <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                <ion-icon src="../../assets/ionicons/cube-outline.svg" class="text-slate-400"></ion-icon>
+                                <i class="fa-solid fa-cube text-slate-400"></i>
                                 Ambientes de la Sede
                             </h3>
                             <button id="verTodosAmbientes" class="text-sm text-sena-green hover:text-green-700 font-medium transition-colors">Ver todos</button>
@@ -260,7 +125,7 @@ require_once '../layouts/sidebar.php';
                                         <span id="filteredAmbientesCount" class="text-sm font-bold text-sena-orange">0</span>
                                     </div>
                                     <button id="volverAmbientesPreview" class="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
-                                        <ion-icon src="../../assets/ionicons/close-outline.svg" class="text-sm"></ion-icon>
+                                        <i class="fa-solid fa-xmark text-sm"></i>
                                     </button>
                                 </div>
 
@@ -269,7 +134,7 @@ require_once '../layouts/sidebar.php';
                                     <!-- Search only for now -->
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <ion-icon src="../../assets/ionicons/search-outline.svg" class="text-slate-400 text-sm"></ion-icon>
+                                            <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm"></i>
                                         </div>
                                         <input
                                             type="text"
@@ -285,115 +150,19 @@ require_once '../layouts/sidebar.php';
 
                                 <!-- No Results State -->
                                 <div id="noAmbienteFilterResults" class="text-center py-8" style="display: none;">
-                                    <ion-icon src="../../assets/ionicons/filter-outline.svg" class="text-gray-400 text-3xl mb-2"></ion-icon>
+                                    <i class="fa-solid fa-filter text-gray-400 text-3xl mb-2"></i>
                                     <p class="text-gray-500 text-sm">No se encontraron ambientes con los filtros aplicados</p>
                                 </div>
                             </div>
 
                             <div id="noAmbientes" class="text-center py-8" style="display: none;">
-                                <ion-icon src="../../assets/ionicons/cube-outline.svg" class="text-gray-400 text-4xl mb-2"></ion-icon>
+                                <i class="fa-solid fa-cube text-gray-400 text-4xl mb-2"></i>
                                 <p class="text-gray-500">No hay ambientes registrados en esta sede</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Instructors Card -->
-                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
-                        <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
-                            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                <ion-icon src="../../assets/ionicons/person-outline.svg" class="text-slate-400"></ion-icon>
-                                Instructores Asignados
-                            </h3>
-                            <button id="verTodosInstructores" class="text-sm text-sena-green hover:text-green-700 font-medium transition-colors">Ver todos</button>
-                        </div>
-                        <div class="p-6">
-                            <!-- Preview Mode -->
-                            <div id="instructoresPreview">
-                                <div class="flex -space-x-3 overflow-hidden mb-4" id="instructoresAvatars">
-                                    <!-- Avatars will be loaded here -->
-                                </div>
-                                <p class="text-sm text-slate-500 dark:text-slate-400">
-                                    Estos instructores tienen carga académica activa en <strong id="sedeNombreInstructores">esta sede</strong> para el trimestre actual.
-                                </p>
-                            </div>
-
-                            <!-- Full List Mode -->
-                            <div id="instructoresFullList" class="space-y-3" style="display: none;">
-                                <div class="flex justify-between items-center mb-4">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Total:</span>
-                                        <span id="totalInstructoresCount" class="text-sm font-bold text-sena-green">0</span>
-                                        <span class="text-slate-400">|</span>
-                                        <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Filtrados:</span>
-                                        <span id="filteredInstructoresCount" class="text-sm font-bold text-sena-orange">0</span>
-                                    </div>
-                                    <button id="volverPreview" class="text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
-                                        <ion-icon src="../../assets/ionicons/close-outline.svg" class="text-sm"></ion-icon>
-                                    </button>
-                                </div>
-
-                                <!-- Filters -->
-                                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 mb-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <!-- Search by Name -->
-                                        <div class="relative">
-                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <ion-icon src="../../assets/ionicons/search-outline.svg" class="text-slate-400 text-sm"></ion-icon>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                id="searchInstructor"
-                                                placeholder="Buscar por nombre..."
-                                                class="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sena-green focus:border-sena-green transition duration-150 ease-in-out">
-                                        </div>
-
-                                        <!-- Filter by Competencia -->
-                                        <div class="relative">
-                                            <select
-                                                id="filterCompetencia"
-                                                class="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sena-green focus:border-sena-green transition duration-150 ease-in-out">
-                                                <option value="">Todas las competencias</option>
-                                                <!-- Options will be populated dynamically -->
-                                            </select>
-                                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                                <ion-icon src="../../assets/ionicons/chevron-down-outline.svg" class="text-slate-400 text-sm"></ion-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Active Filters Display -->
-                                    <div id="activeFilters" class="mt-3 flex flex-wrap gap-2" style="display: none;">
-                                        <span class="text-xs text-slate-500 dark:text-slate-400">Filtros activos:</span>
-                                        <div id="activeFiltersList" class="flex flex-wrap gap-1">
-                                            <!-- Active filters will be shown here -->
-                                        </div>
-                                        <button id="clearFilters" class="text-xs text-sena-orange hover:text-orange-600 font-medium transition-colors">
-                                            Limpiar filtros
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div id="instructoresList" class="space-y-2 max-h-64 overflow-y-auto">
-                                    <!-- Full instructor list will be loaded here -->
-                                </div>
-
-                                <!-- No Results State -->
-                                <div id="noFilterResults" class="text-center py-8" style="display: none;">
-                                    <ion-icon src="../../assets/ionicons/filter-outline.svg" class="text-gray-400 text-3xl mb-2"></ion-icon>
-                                    <p class="text-gray-500 text-sm">No se encontraron instructores con los filtros aplicados</p>
-                                    <button id="clearFiltersBtn" class="mt-2 text-sm text-sena-green hover:text-green-700 font-medium">
-                                        Limpiar filtros
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Empty State -->
-                            <div id="noInstructores" class="text-center py-8" style="display: none;">
-                                <ion-icon src="../../assets/ionicons/person-outline.svg" class="text-gray-400 text-4xl mb-2"></ion-icon>
-                                <p class="text-gray-500">No hay instructores asignados a esta sede</p>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Instructors Card removed -->
                 </div>
             </div>
         </div>
@@ -401,12 +170,12 @@ require_once '../layouts/sidebar.php';
         <!-- Error Card -->
         <div id="errorCard" class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-red-200 dark:border-red-700 p-12 text-center" style="display: none;">
             <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ion-icon src="../../assets/ionicons/alert-circle-outline.svg" class="text-red-600 dark:text-red-400"></ion-icon>
+                <i class="fa-solid fa-circle-exclamation text-red-600 dark:text-red-400"></i>
             </div>
             <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Error al Cargar</h3>
             <p id="errorMessage" class="text-slate-600 dark:text-slate-400 mb-6">No se pudo cargar la información de la sede.</p>
             <a href="index.php" class="inline-flex items-center gap-2 bg-sena-green hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium">
-                <ion-icon src="../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+                <i class="fa-solid fa-arrow-left"></i>
                 Volver a Sedes
             </a>
         </div>
@@ -414,7 +183,7 @@ require_once '../layouts/sidebar.php';
         <!-- Static Delete Button -->
         <div class="flex justify-end pt-4">
             <button id="deleteSedeBtn" class="flex items-center gap-2 bg-white dark:bg-slate-800 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 px-4 py-3 rounded-xl shadow-md border border-red-100 dark:border-red-900/30 transition-all duration-300 hover:translate-y-[-2px] active:translate-y-[0px] group">
-                <ion-icon src="../../assets/ionicons/trash-outline.svg" class="text-xl group-hover:shake"></ion-icon>
+                <i class="fa-solid fa-trash text-xl group-hover:shake"></i>
                 <span class="font-bold text-sm">Eliminar Sede</span>
             </button>
         </div>
@@ -426,11 +195,11 @@ require_once '../layouts/sidebar.php';
                 <div class="bg-surface-light dark:bg-surface-dark w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden relative z-10 scale-95 opacity-0 transition-all duration-300" id="modalContent">
                     <div class="p-6">
                         <div class="w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4 mx-auto">
-                            <ion-icon src="../../assets/ionicons/alert-circle-outline.svg" class="text-3xl text-red-600 dark:text-red-400"></ion-icon>
+                            <i class="fa-solid fa-circle-exclamation text-3xl text-red-600 dark:text-red-400"></i>
                         </div>
                         <h3 class="text-xl font-bold text-slate-900 dark:text-white text-center mb-2">¿Eliminar Sede?</h3>
                         <p class="text-slate-600 dark:text-slate-400 text-center text-sm mb-6">
-                            Estás a punto de eliminar la sede <strong id="sedeToDeleteName" class="text-slate-900 dark:text-white"></strong>. Esta acción es irreversible y podría afectar a los programas e instructores vinculados.
+                            Estás a punto de eliminar la sede <strong id="sedeToDeleteName" class="text-slate-900 dark:text-white"></strong>. Esta acción es irreversible y afectará a los ambientes asociados.
                         </p>
                         <div class="flex gap-3">
                             <button id="cancelDeleteBtn" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">

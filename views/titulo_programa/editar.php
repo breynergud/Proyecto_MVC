@@ -2,7 +2,7 @@
 $pageTitle = 'Editar Título - SENA';
 $activeNavItem = 'titulos';
 require_once '../layouts/head.php';
-require_once '../layouts/sidebar.php';
+require_once '../layouts/sidebar-green.php';
 
 $id = $_GET['id'] ?? null;
 ?>
@@ -13,18 +13,18 @@ $id = $_GET['id'] ?? null;
     <header class="main-header">
         <div class="header-content">
             <nav class="breadcrumb">
-                <a href="#">Inicio</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                <a href="../dashboard/index.php">Inicio</a>
+                <i class="fa-solid fa-chevron-right"></i>
                 <a href="index.php">Títulos</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                <i class="fa-solid fa-chevron-right"></i>
                 <span>Editar</span>
             </nav>
             <h1 class="page-title">Modificar Título</h1>
         </div>
 
         <div class="header-actions">
-            <a href="ver.php?id=<?php echo htmlspecialchars($id); ?>" class="btn-secondary">
-                <ion-icon src="../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+            <a href="index.php" class="btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i>
                 Volver
             </a>
         </div>
@@ -35,7 +35,7 @@ $id = $_GET['id'] ?? null;
         <div class="form-card">
             <div class="form-header">
                 <div class="form-icon">
-                    <ion-icon src="../../assets/ionicons/ribbon-outline.svg"></ion-icon>
+                    <i class="fa-solid fa-certificate"></i>
                 </div>
                 <div>
                     <h2>Editar Información</h2>
@@ -62,12 +62,12 @@ $id = $_GET['id'] ?? null;
                 </div>
 
                 <div class="form-actions">
-                    <a href="ver.php?id=<?php echo htmlspecialchars($id); ?>" class="btn-secondary">
-                        <ion-icon src="../../assets/ionicons/close-circle-outline.svg"></ion-icon>
+                    <a href="index.php" class="btn-secondary">
+                        <i class="fa-solid fa-circle-xmark"></i>
                         Cancelar
                     </a>
                     <button type="submit" class="btn-primary">
-                        <ion-icon src="../../assets/ionicons/save-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-floppy-disk"></i>
                         Actualizar Título
                     </button>
                 </div>

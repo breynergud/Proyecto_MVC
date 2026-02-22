@@ -2,7 +2,7 @@
 $pageTitle = 'Detalle de Título - SENA';
 $activeNavItem = 'titulos';
 require_once '../layouts/head.php';
-require_once '../layouts/sidebar.php';
+require_once '../layouts/sidebar-green.php';
 
 $id = $_GET['id'] ?? null;
 ?>
@@ -19,21 +19,21 @@ $id = $_GET['id'] ?? null;
                     </li>
                     <li>
                         <div class="flex items-center">
-                            <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg" class="text-base mx-1"></ion-icon>
-                            <span class="text-slate-800 dark:text-white font-medium">Detalle de Título</span>
+                            <i class="fa-solid fa-chevron-right text-base mx-1"></i>
+                            <span class="text-slate-800 dark:text-white font-medium">Detalle del Título</span>
                         </div>
                     </li>
                 </ol>
             </nav>
             <h1 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <ion-icon src="../../assets/ionicons/ribbon-outline.svg" class="text-2xl text-sena-green"></ion-icon>
+                <i class="fa-solid fa-certificate text-2xl text-sena-green"></i>
                 Información del Título
             </h1>
         </div>
 
         <div class="flex items-center gap-4">
-            <a href="index.php" class="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-sena-orange transition-colors px-3 py-2 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/10 border border-transparent hover:border-sena-orange/20">
-                <ion-icon src="../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+            <a href="index.php" class="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-sena-green transition-colors px-3 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/10 border border-transparent hover:border-sena-green/20">
+                <i class="fa-solid fa-arrow-left"></i>
                 <span class="text-sm font-medium">Regresar</span>
             </a>
         </div>
@@ -55,16 +55,16 @@ $id = $_GET['id'] ?? null;
                         <div class="p-6">
                             <div class="flex items-center justify-between mb-6">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 bg-sena-green/10 rounded-xl flex items-center justify-center">
-                                        <ion-icon src="../../assets/ionicons/ribbon-outline.svg" class="text-2xl text-sena-green"></ion-icon>
-                                    </div>
+                                    <div class="w-20 h-20 bg-sena-green/10 dark:bg-sena-green/20 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                                <i class="fa-solid fa-certificate text-4xl text-sena-green"></i>
+                            </div>        </div>
                                     <div>
                                         <h3 class="text-slate-900 dark:text-white font-bold">Título Académico</h3>
                                         <p class="text-slate-500 text-xs">Información General</p>
                                     </div>
                                 </div>
-                                <a href="editar.php?id=<?php echo htmlspecialchars($id); ?>" class="text-sena-green hover:text-emerald-700 transition-colors flex items-center gap-1 text-sm font-medium">
-                                    <ion-icon src="../../assets/ionicons/create-outline.svg"></ion-icon>
+                                <a href="#" id="editBtn" class="text-sena-green hover:text-emerald-700 transition-colors flex items-center gap-1 text-sm font-medium">
+                                    <i class="fa-solid fa-pen-to-square"></i>
                                     Editar
                                 </a>
                             </div>
@@ -92,7 +92,7 @@ $id = $_GET['id'] ?? null;
                     <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
                         <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
                             <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                <ion-icon src="../../assets/ionicons/school-outline.svg" class="text-slate-400"></ion-icon>
+                                <i class="fa-solid fa-school text-slate-400"></i>
                                 Programas vinculados con este título
                             </h3>
                         </div>
@@ -101,32 +101,39 @@ $id = $_GET['id'] ?? null;
                                 <!-- Programs will be loaded here -->
                             </div>
                             <div id="noProgramas" class="text-center py-12" style="display: none;">
-                                <ion-icon src="../../assets/ionicons/school-outline.svg" class="text-slate-200 text-5xl mb-3"></ion-icon>
+                                <i class="fa-solid fa-school text-slate-200 text-5xl mb-3"></i>
                                 <p class="text-slate-500">No hay programas registrados bajo este título académico aún.</p>
                             </div>
                         </div>
+                    </div>
+                    
+                    <!-- Placeholder for extra info -->
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 text-center mt-6">
+                        <i class="fa-solid fa-graduation-cap text-slate-200 text-5xl mb-3"></i>
+                        <h4 class="text-slate-900 dark:text-white font-bold mb-1">Programas Asociados</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Listado de programas que pertenecen a este nivel de formación.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Danger Zone / Delete Button -->
             <div class="flex justify-end pt-4">
-                <button id="deleteTituloBtn" class="flex items-center gap-2 bg-white dark:bg-slate-800 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 px-4 py-3 rounded-xl shadow-md border border-red-100 dark:border-red-900/30 transition-all duration-300 hover:translate-y-[-2px] active:translate-y-[0px] group">
-                    <ion-icon src="../../assets/ionicons/trash-outline.svg" class="text-xl group-hover:shake"></ion-icon>
-                    <span class="font-bold text-sm">Eliminar Título</span>
-                </button>
+                <button id="deleteBtn" class="flex items-center gap-2 bg-white dark:bg-slate-800 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 px-4 py-3 rounded-xl shadow-md border border-red-100 dark:border-red-900/30 transition-all duration-300 hover:translate-y-[-2px] active:translate-y-[0px] group">
+                <i class="fa-solid fa-trash text-xl group-hover:shake"></i>
+                <span class="font-bold text-sm">Eliminar Título</span>
+            </button>
             </div>
         </div>
 
         <!-- Error Card -->
         <div id="errorCard" class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-red-200 dark:border-red-700 p-12 text-center" style="display: none;">
             <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ion-icon src="../../assets/ionicons/alert-circle-outline.svg" class="text-red-600 dark:text-red-400"></ion-icon>
+                <i class="fa-solid fa-circle-exclamation text-red-600 dark:text-red-400"></i>
             </div>
             <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Título No Encontrado</h3>
             <p id="errorMessage" class="text-slate-600 dark:text-slate-400 mb-6">No se pudo cargar la información del título seleccionado.</p>
             <a href="index.php" class="inline-flex items-center gap-2 bg-sena-green hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium">
-                <ion-icon src="../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+                <i class="fa-solid fa-arrow-left"></i>
                 Volver al Listado
             </a>
         </div>
@@ -139,9 +146,9 @@ $id = $_GET['id'] ?? null;
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="bg-surface-light dark:bg-surface-dark w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden relative z-10 scale-95 opacity-0 transition-all duration-300" id="modalContent">
             <div class="p-6 text-center">
-                <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4 mx-auto">
-                    <ion-icon src="../../assets/ionicons/alert-circle-outline.svg" class="text-4xl text-red-600 dark:text-red-400"></ion-icon>
-                </div>
+                        <div class="w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4 mx-auto">
+                            <i class="fa-solid fa-circle-exclamation text-3xl text-red-600 dark:text-red-400"></i>
+                        </div>
                 <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">¿Eliminar Título?</h3>
                 <p class="text-slate-600 dark:text-slate-400 text-sm mb-6">
                     Estás a punto de eliminar el título <strong id="tituloToDeleteName" class="text-slate-900 dark:text-white"></strong>. Esta acción eliminará permanentemente el registro de la base de datos.

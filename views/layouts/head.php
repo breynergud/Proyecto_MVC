@@ -9,10 +9,10 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="../../assets/js/sede/tailwind-config.js"></script>
     <link href="../../assets/css/styles.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="../../assets/css/sidebar-green.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <link href="../../assets/css/dashboard.css?v=<?php echo time(); ?>" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Ionicons -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-50">

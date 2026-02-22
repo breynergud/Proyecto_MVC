@@ -57,20 +57,28 @@ class AmbienteController
     public function store()
     {
         try {
+            $id = $_POST['amb_id'] ?? null;
             $nombre = $_POST['amb_nombre'] ?? null;
             $sede_id = $_POST['sede_sede_id'] ?? null;
 
-            if (!$nombre || !$sede_id) {
-                $this->sendResponse(['error' => 'Nombre y Sede son obligatorios'], 400);
+            if (!$id || !$nombre || !$sede_id) {
+                $this->sendResponse(['error' => 'ID (5 caracteres), Nombre y Sede son obligatorios'], 400);
                 return;
             }
 
+            // Validar unicidad
+            if ($this->model->exists($id)) {
+                $this->sendResponse(['error' => "El ID de ambiente $id ya se encuentra registrado"], 409);
+                return;
+            }
+
+            $this->model->setAmbId($id);
             $this->model->setAmbnombre($nombre);
             $this->model->setSedeSedeId($sede_id);
-            $id = $this->model->create();
+            $newId = $this->model->create();
 
-            if ($id) {
-                $this->sendResponse(['message' => 'Ambiente creado correctamente', 'id' => $id], 201);
+            if ($newId) {
+                $this->sendResponse(['message' => 'Ambiente creado correctamente', 'id' => $newId], 201);
             } else {
                 $this->sendResponse(['error' => 'No se pudo crear el ambiente'], 500);
             }
@@ -85,6 +93,8 @@ class AmbienteController
     public function update()
     {
         try {
+            // Nota: amb_id es PK, si se quiere cambiar el ID, debería ser otra lógica o no permitirse.
+            // Aquí asumimos que amb_id identifica el registro a actualizar.
             $id = $_POST['amb_id'] ?? null;
             $nombre = $_POST['amb_nombre'] ?? null;
             $sede_id = $_POST['sede_sede_id'] ?? null;

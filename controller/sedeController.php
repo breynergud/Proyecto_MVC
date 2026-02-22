@@ -54,7 +54,6 @@ class SedeController
     {
         try {
             $nombre = $_POST['sede_nombre'] ?? null;
-            $foto = $this->handleFileUpload('sede_foto');
 
             if (!$nombre) {
                 $this->sendResponse(['error' => 'El nombre de la sede es obligatorio'], 400);
@@ -62,7 +61,6 @@ class SedeController
             }
 
             $this->model->setSedeNombre($nombre);
-            $this->model->setSedeFoto($foto);
             $id = $this->model->create();
 
             if ($id) {
@@ -83,7 +81,6 @@ class SedeController
         try {
             $id = $_POST['sede_id'] ?? null;
             $nombre = $_POST['sede_nombre'] ?? null;
-            $foto = $this->handleFileUpload('sede_foto');
 
             if (!$id || !$nombre) {
                 $this->sendResponse(['error' => 'ID y nombre son obligatorios'], 400);
@@ -92,13 +89,6 @@ class SedeController
 
             $this->model->setSedeId($id);
             $this->model->setSedeNombre($nombre);
-
-            // Si no se subió foto nueva, mantenemos la actual
-            if (!$foto) {
-                $current = $this->model->read();
-                $foto = !empty($current) ? $current[0]['foto'] : null;
-            }
-            $this->model->setSedeFoto($foto);
 
             if ($this->model->update()) {
                 $this->sendResponse(['message' => 'Sede actualizada correctamente']);
@@ -136,32 +126,6 @@ class SedeController
             }
             $this->sendResponse(['error' => $message], 500);
         }
-    }
-
-    /**
-     * Helper para manejar la subida de archivos
-     */
-    private function handleFileUpload($fieldName)
-    {
-        if (!isset($_FILES[$fieldName]) || $_FILES[$fieldName]['error'] !== UPLOAD_ERR_OK) {
-            return null;
-        }
-
-        $uploadDir = dirname(__DIR__) . '/assets/imagenes/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $fileExtension = pathinfo($_FILES[$fieldName]['name'], PATHINFO_EXTENSION);
-        $fileName = uniqid('sede_') . '.' . $fileExtension;
-        $targetPath = $uploadDir . $fileName;
-
-        if (move_uploaded_file($_FILES[$fieldName]['tmp_name'], $targetPath)) {
-            // Retornamos la ruta relativa para guardar en BD
-            return '../../assets/imagenes/' . $fileName;
-        }
-
-        return null;
     }
 
     public function getProgramas($sede_id = null)

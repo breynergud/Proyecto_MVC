@@ -1,5 +1,6 @@
 <?php
-require_once '../Conexion.php';
+require_once dirname(__DIR__) . '/Conexion.php';
+
 class CompetenciaModel
 {
     private $comp_id;
@@ -8,12 +9,12 @@ class CompetenciaModel
     private $comp_nombre_unidad_competencia;
     private $db;
 
-    public function __construct($comp_id, $comp_nombre_corto, $comp_horas, $comp_nombre_unidad_competencia)
+    public function __construct($comp_id = null, $comp_nombre_corto = null, $comp_horas = null, $comp_nombre_unidad_competencia = null)
     {
-        $this->setCompId($comp_id);
-        $this->setCompNombreCorto($comp_nombre_corto);
-        $this->setCompHoras($comp_horas);
-        $this->setCompNombreUnidadCompetencia($comp_nombre_unidad_competencia);
+        if ($comp_id !== null) $this->setCompId($comp_id);
+        if ($comp_nombre_corto !== null) $this->setCompNombreCorto($comp_nombre_corto);
+        if ($comp_horas !== null) $this->setCompHoras($comp_horas);
+        if ($comp_nombre_unidad_competencia !== null) $this->setCompNombreUnidadCompetencia($comp_nombre_unidad_competencia);
         $this->db = Conexion::getConnect();
     }
     //getters 

@@ -1,71 +1,95 @@
 /**
- * NotificationService - Handlers for premium custom alerts
+ * NotificationService - Sistema de notificaciones tipo Toast
  */
 const NotificationService = {
-    overlay: null,
-    modal: null,
-    errorAlert: null,
-    successAlert: null,
-    errorText: null,
-    successText: null,
+    container: null,
 
     init() {
-        this.overlay = document.getElementById('notification-overlay');
-        this.modal = document.getElementById('notification-modal');
-        this.errorAlert = document.getElementById('error-alert');
-        this.successAlert = document.getElementById('success-alert');
-        this.errorText = document.getElementById('error-message-text');
-        this.successText = document.getElementById('success-message-text');
+        // Crear contenedor de toasts si no existe
+        if (!this.container) {
+            this.container = document.createElement('div');
+            this.container.id = 'toast-container';
+            this.container.className = 'toast-container';
+            document.body.appendChild(this.container);
+        }
     },
 
-    showError(message) {
-        if (!this.overlay) this.init();
-
-        this.errorText.textContent = message;
-        this.errorAlert.classList.remove('hidden');
-        this.successAlert.classList.add('hidden');
-
-        this.show();
+    showError(message, duration = 5000) {
+        this.show(message, 'error', duration);
     },
 
-    showSuccess(message, callback = null) {
-        if (!this.overlay) this.init();
+    showSuccess(message, duration = 4000) {
+        this.show(message, 'success', duration);
+    },
 
-        this.successText.textContent = message;
-        this.successAlert.classList.remove('hidden');
-        this.errorAlert.classList.add('hidden');
+    showWarning(message, duration = 4000) {
+        this.show(message, 'warning', duration);
+    },
 
-        const closeBtn = document.getElementById('success-close-btn');
-        if (callback) {
-            closeBtn.onclick = () => {
-                this.hide();
-                callback();
-            };
-        } else {
-            closeBtn.onclick = () => this.hide();
+    showInfo(message, duration = 4000) {
+        this.show(message, 'info', duration);
+    },
+
+    show(message, type = 'info', duration = 4000) {
+        this.init();
+
+        // Crear el toast
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+
+        // Icono según el tipo
+        const icons = {
+            success: '<i class="fa-solid fa-circle-check"></i>',
+            error: '<i class="fa-solid fa-circle-xmark"></i>',
+            warning: '<i class="fa-solid fa-triangle-exclamation"></i>',
+            info: '<i class="fa-solid fa-circle-info"></i>'
+        };
+
+        toast.innerHTML = `
+            <div class="toast-icon">
+                ${icons[type] || icons.info}
+            </div>
+            <div class="toast-content">
+                <div class="toast-message">${this.escapeHtml(message)}</div>
+            </div>
+            <button class="notification-close" onclick="this.parentElement.remove()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        `;
+
+        // Agregar al contenedor
+        this.container.appendChild(toast);
+
+        // Animar entrada
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+
+        // Auto-remover después del tiempo especificado
+        if (duration > 0) {
+            setTimeout(() => {
+                this.hide(toast);
+            }, duration);
         }
 
-        this.show();
+        return toast;
     },
 
-    show() {
-        this.overlay.classList.remove('hidden');
-        this.overlay.classList.add('show'); // Uses styles.css .modal.show
+    hide(toast) {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
 
         setTimeout(() => {
-            this.modal.classList.remove('scale-95', 'opacity-0');
-            this.modal.classList.add('scale-100', 'opacity-100');
-        }, 10);
-    },
-
-    hide() {
-        this.modal.classList.remove('scale-100', 'opacity-100');
-        this.modal.classList.add('scale-95', 'opacity-0');
-
-        setTimeout(() => {
-            this.overlay.classList.remove('show');
-            this.overlay.classList.add('hidden');
+            if (toast.parentElement) {
+                toast.remove();
+            }
         }, 300);
+    },
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 };
 

@@ -2,7 +2,7 @@
 $pageTitle = 'Editar Ambiente - SENA';
 $activeNavItem = 'ambientes';
 require_once '../layouts/head.php';
-require_once '../layouts/sidebar.php';
+require_once '../layouts/sidebar-green.php';
 ?>
 
 <!-- Main Content -->
@@ -12,16 +12,16 @@ require_once '../layouts/sidebar.php';
         <div class="header-content">
             <nav class="breadcrumb">
                 <a href="../dashboard/index.php">Inicio</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                <i class="fa-solid fa-chevron-right"></i>
                 <a href="index.php">Ambientes</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                <i class="fa-solid fa-chevron-right"></i>
                 <span>Editar</span>
             </nav>
             <h1 class="page-title">Editar Ambiente</h1>
         </div>
         <div class="header-actions">
             <a href="index.php" class="btn-secondary">
-                <ion-icon src="../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+                <i class="fa-solid fa-arrow-left"></i>
                 Volver
             </a>
         </div>
@@ -36,7 +36,7 @@ require_once '../layouts/sidebar.php';
         <div id="formCard" class="form-card" style="display: none;">
             <div class="form-header">
                 <div class="form-icon">
-                    <ion-icon src="../../assets/ionicons/create-outline.svg"></ion-icon>
+                    <i class="fa-solid fa-pen-to-square"></i>
                 </div>
                 <div>
                     <h2>Modificar Información</h2>
@@ -64,11 +64,11 @@ require_once '../layouts/sidebar.php';
 
                 <div class="form-actions">
                     <a href="index.php" class="btn-secondary">
-                        <ion-icon src="../../assets/ionicons/close-circle-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-circle-xmark"></i>
                         Cancelar
                     </a>
                     <button type="submit" class="btn-primary">
-                        <ion-icon src="../../assets/ionicons/save-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-floppy-disk"></i>
                         Actualizar Ambiente
                     </button>
                 </div>
@@ -78,7 +78,7 @@ require_once '../layouts/sidebar.php';
         <!-- Info Card -->
         <div id="infoCard" class="info-card">
             <div class="info-header">
-                <ion-icon src="../../assets/ionicons/information-circle-outline.svg"></ion-icon>
+                <i class="fa-solid fa-circle-info"></i>
                 <h3>Información de Edición</h3>
             </div>
             <div class="info-content">
@@ -97,7 +97,7 @@ require_once '../layouts/sidebar.php';
 <div id="successModal" class="modal">
     <div class="modal-content">
         <div class="modal-header success">
-            <ion-icon src="../../assets/ionicons/checkmark-circle-outline.svg"></ion-icon>
+            <i class="fa-solid fa-circle-check"></i>
             <h3>Ambiente Actualizado</h3>
         </div>
         <div class="modal-body">

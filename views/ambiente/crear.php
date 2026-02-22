@@ -2,7 +2,7 @@
 $pageTitle = 'Registrar Ambiente - SENA';
 $activeNavItem = 'ambientes';
 require_once '../layouts/head.php';
-require_once '../layouts/sidebar.php';
+require_once '../layouts/sidebar-green.php';
 ?>
 
 <!-- Main Content -->
@@ -12,16 +12,16 @@ require_once '../layouts/sidebar.php';
         <div class="header-content">
             <nav class="breadcrumb">
                 <a href="../dashboard/index.php">Inicio</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                <i class="fa-solid fa-chevron-right"></i>
                 <a href="index.php">Ambientes</a>
-                <ion-icon src="../../assets/ionicons/chevron-forward-outline.svg"></ion-icon>
+                <i class="fa-solid fa-chevron-right"></i>
                 <span>Registrar</span>
             </nav>
             <h1 class="page-title">Registrar Nuevo Ambiente</h1>
         </div>
         <div class="header-actions">
             <a href="index.php" class="btn-secondary">
-                <ion-icon src="../../assets/ionicons/arrow-back-outline.svg"></ion-icon>
+                <i class="fa-solid fa-arrow-left"></i>
                 Volver
             </a>
         </div>
@@ -31,7 +31,7 @@ require_once '../layouts/sidebar.php';
         <div class="form-card">
             <div class="form-header">
                 <div class="form-icon">
-                    <ion-icon src="../../assets/ionicons/cube-outline.svg"></ion-icon>
+                    <i class="fa-solid fa-cube"></i>
                 </div>
                 <div>
                     <h2>Información del Ambiente</h2>
@@ -40,6 +40,12 @@ require_once '../layouts/sidebar.php';
             </div>
 
             <form id="ambienteForm" class="form-content">
+                <div class="form-group">
+                    <label for="amb_id" class="form-label required">ID del Ambiente (Máx 5 caracteres)</label>
+                    <input type="text" id="amb_id" name="amb_id" class="form-input" placeholder="Ej: S101" maxlength="5" required>
+                    <div class="form-error" id="amb_id_error"></div>
+                </div>
+
                 <div class="form-group">
                     <label for="amb_nombre" class="form-label required">Nombre del Ambiente</label>
                     <input type="text" id="amb_nombre" name="amb_nombre" class="form-input" placeholder="Ej: Ambiente 101 - Sistemas" required>
@@ -57,11 +63,11 @@ require_once '../layouts/sidebar.php';
 
                 <div class="form-actions">
                     <a href="index.php" class="btn-secondary">
-                        <ion-icon src="../../assets/ionicons/close-circle-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-circle-xmark"></i>
                         Cancelar
                     </a>
                     <button type="submit" class="btn-primary">
-                        <ion-icon src="../../assets/ionicons/save-outline.svg"></ion-icon>
+                        <i class="fa-solid fa-floppy-disk"></i>
                         Guardar Ambiente
                     </button>
                 </div>
@@ -71,7 +77,7 @@ require_once '../layouts/sidebar.php';
         <!-- Info Card -->
         <div class="info-card">
             <div class="info-header">
-                <ion-icon src="../../assets/ionicons/information-circle-outline.svg"></ion-icon>
+                <i class="fa-solid fa-circle-info"></i>
                 <h3>Información Importante</h3>
             </div>
             <div class="info-content">
@@ -90,7 +96,7 @@ require_once '../layouts/sidebar.php';
 <div id="successModal" class="modal">
     <div class="modal-content">
         <div class="modal-header success">
-            <ion-icon src="../../assets/ionicons/checkmark-circle-outline.svg"></ion-icon>
+            <i class="fa-solid fa-circle-check"></i>
             <h3>Ambiente Registrado</h3>
         </div>
         <div class="modal-body">
