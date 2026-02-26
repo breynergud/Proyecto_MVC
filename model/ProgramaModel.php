@@ -4,15 +4,15 @@ class ProgramaModel
 {
     private $prog_codigo;
     private $prog_denominacion;
-    private $tit_programa_titpro_id;
+    private $TIT_PROGRAMA_titpro_id;
     private $prog_tipo;
     private $db;
 
-    public function __construct($prog_codigo = null, $prog_denominacion = null, $tit_programa_titpro_id = null, $prog_tipo = null)
+    public function __construct($prog_codigo = null, $prog_denominacion = null, $TIT_PROGRAMA_titpro_id = null, $prog_tipo = null)
     {
         if ($prog_codigo !== null) $this->setProgCodigo($prog_codigo);
         if ($prog_denominacion !== null) $this->setProgDenominacion($prog_denominacion);
-        if ($tit_programa_titpro_id !== null) $this->setTitProgramaTitproId($tit_programa_titpro_id);
+        if ($TIT_PROGRAMA_titpro_id !== null) $this->setTitProgramaTitproId($TIT_PROGRAMA_titpro_id);
         if ($prog_tipo !== null) $this->setProgTipo($prog_tipo);
         $this->db = Conexion::getConnect();
     }
@@ -28,7 +28,7 @@ class ProgramaModel
     }
     public function getTitProgramaTitproId()
     {
-        return $this->tit_programa_titpro_id;
+        return $this->TIT_PROGRAMA_titpro_id;
     }
     public function getProgTipo()
     {
@@ -44,9 +44,9 @@ class ProgramaModel
     {
         $this->prog_denominacion = $prog_denominacion;
     }
-    public function setTitProgramaTitproId($tit_programa_titpro_id)
+    public function setTitProgramaTitproId($TIT_PROGRAMA_titpro_id)
     {
-        $this->tit_programa_titpro_id = $tit_programa_titpro_id;
+        $this->TIT_PROGRAMA_titpro_id = $TIT_PROGRAMA_titpro_id;
     }
     public function setProgTipo($prog_tipo)
     {
@@ -56,24 +56,22 @@ class ProgramaModel
     // CRUD
     public function create()
     {
-        // Si prog_codigo está setead, lo usamos (asumiendo que el usuario quiere forzar el ID/Código).
-        // Si no, dejamos que SERIAL actúe (aunque el controlador valida que sea requerido).
         if ($this->prog_codigo) {
-            $query = "INSERT INTO programa (prog_codigo, prog_denominacion, tit_programa_titpro_id, prog_tipo) 
-                      VALUES (:prog_codigo, :prog_denominacion, :tit_programa_titpro_id, :prog_tipo)";
+            $query = "INSERT INTO programa (prog_codigo, prog_denominacion, TIT_PROGRAMA_titpro_id, prog_tipo) 
+                      VALUES (:prog_codigo, :prog_denominacion, :tit_prog_id, :prog_tipo)";
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':prog_codigo', $this->prog_codigo);
             $stmt->bindParam(':prog_denominacion', $this->prog_denominacion);
-            $stmt->bindParam(':tit_programa_titpro_id', $this->tit_programa_titpro_id);
+            $stmt->bindParam(':tit_prog_id', $this->TIT_PROGRAMA_titpro_id);
             $stmt->bindParam(':prog_tipo', $this->prog_tipo);
             $stmt->execute();
             return $this->prog_codigo;
         } else {
-            $query = "INSERT INTO programa (prog_denominacion, tit_programa_titpro_id, prog_tipo) 
-                      VALUES (:prog_denominacion, :tit_programa_titpro_id, :prog_tipo)";
+            $query = "INSERT INTO programa (prog_denominacion, TIT_PROGRAMA_titpro_id, prog_tipo) 
+                      VALUES (:prog_denominacion, :tit_prog_id, :prog_tipo)";
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':prog_denominacion', $this->prog_denominacion);
-            $stmt->bindParam(':tit_programa_titpro_id', $this->tit_programa_titpro_id);
+            $stmt->bindParam(':tit_prog_id', $this->TIT_PROGRAMA_titpro_id);
             $stmt->bindParam(':prog_tipo', $this->prog_tipo);
             $stmt->execute();
             return $this->db->lastInsertId();
@@ -84,7 +82,7 @@ class ProgramaModel
     {
         $sql = "SELECT p.*, t.titpro_nombre 
                 FROM programa p
-                INNER JOIN titulo_programa t ON p.tit_programa_titpro_id = t.titpro_id
+                INNER JOIN titulo_programa t ON p.TIT_PROGRAMA_titpro_id = t.titpro_id
                 WHERE p.prog_codigo = :prog_codigo";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':prog_codigo' => $this->prog_codigo]);
@@ -95,7 +93,7 @@ class ProgramaModel
     {
         $sql = "SELECT p.*, t.titpro_nombre 
                 FROM programa p
-                INNER JOIN titulo_programa t ON p.tit_programa_titpro_id = t.titpro_id
+                INNER JOIN titulo_programa t ON p.TIT_PROGRAMA_titpro_id = t.titpro_id
                 ORDER BY p.prog_codigo DESC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
@@ -106,12 +104,12 @@ class ProgramaModel
     {
         $query = "UPDATE programa 
                   SET prog_denominacion = :prog_denominacion, 
-                      tit_programa_titpro_id = :tit_programa_titpro_id, 
+                      TIT_PROGRAMA_titpro_id = :tit_prog_id, 
                       prog_tipo = :prog_tipo
                   WHERE prog_codigo = :prog_codigo";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':prog_denominacion', $this->prog_denominacion);
-        $stmt->bindParam(':tit_programa_titpro_id', $this->tit_programa_titpro_id);
+        $stmt->bindParam(':tit_prog_id', $this->TIT_PROGRAMA_titpro_id);
         $stmt->bindParam(':prog_tipo', $this->prog_tipo);
         $stmt->bindParam(':prog_codigo', $this->prog_codigo);
         return $stmt->execute();

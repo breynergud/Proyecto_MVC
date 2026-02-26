@@ -54,6 +54,17 @@ require_once '../layouts/sidebar-green.php';
                 </div>
 
                 <div class="form-group">
+                    <label for="tipo_ambiente" class="form-label required">Tipo de Ambiente</label>
+                    <select id="tipo_ambiente" name="tipo_ambiente" class="form-input" required>
+                        <option value="Convencional">Convencional</option>
+                        <option value="Especializado">Especializado</option>
+                        <option value="Ext SENA-MEN">Ext SENA-MEN</option>
+                        <option value="Ext Agropecuario">Ext Agropecuario</option>
+                    </select>
+                    <div class="form-error" id="tipo_ambiente_error"></div>
+                </div>
+
+                <div class="form-group">
                     <label for="sede_sede_id" class="form-label required">Sede</label>
                     <select id="sede_sede_id" name="sede_sede_id" class="form-input" required>
                         <option value="">Seleccione una sede...</option>

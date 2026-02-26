@@ -104,6 +104,39 @@ require_once '../layouts/sidebar-green.php';
                     </div>
                 </div>
 
+                <!-- Sección Especialidades (Opcional) -->
+                <div class="mt-8 pt-6 border-t border-gray-100">
+                    <div class="form-header mb-4">
+                        <div class="form-icon" style="background: var(--sena-orange); color: white;">
+                            <i class="fa-solid fa-medal"></i>
+                        </div>
+                        <div>
+                            <h2>Especialidades (Competencias)</h2>
+                            <p>Modifique el programa y asigne las competencias que este instructor está avalado para dictar.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6">
+                        <div class="form-group">
+                            <label for="intruProgSelect" class="form-label">
+                                Programa de Formación
+                            </label>
+                            <select id="intruProgSelect" class="form-input" onchange="instructorView.loadCompetenciasForPrograma()">
+                                <option value="">Seleccione un programa...</option>
+                            </select>
+                        </div>
+
+                        <div id="compContainer" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem;">
+                            <h3 style="font-size: 0.875rem; font-weight: 600; color: #475569; margin-bottom: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">
+                                Seleccionar Competencias
+                            </h3>
+                            <div id="compList" class="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
+                                <!-- Checkboxes generados dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-actions mt-8">
                     <a href="index.php" class="btn-secondary">
                         <i class="fa-solid fa-circle-xmark"></i>
@@ -149,7 +182,7 @@ require_once '../layouts/sidebar-green.php';
     </div>
 </div>
 
-<script src="../../assets/js/instructor/editar.js"></script>
+<script src="../../assets/js/instructor/editar.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>

@@ -44,6 +44,12 @@ require_once '../layouts/sidebar-green.php';
             <form id="crearFichaForm" class="form-content">
                 <div class="form-grid">
                     <div class="form-group full-width">
+                        <label for="fich_id" class="form-label required">Número de Ficha</label>
+                        <input type="number" id="fich_id" name="fich_id" class="form-input" placeholder="Ej: 228107" required>
+                        <div class="form-help">Ingrese el número identificador de la ficha</div>
+                    </div>
+
+                    <div class="form-group full-width">
                         <label for="programa_prog_id" class="form-label required">Programa de Formación</label>
                         <select id="programa_prog_id" name="programa_prog_id" class="form-input" required>
                             <option value="" disabled selected>Seleccione un programa...</option>
@@ -75,6 +81,16 @@ require_once '../layouts/sidebar-green.php';
                         <select id="coordinacion_coord_id" name="coordinacion_coord_id" class="form-input" required>
                             <option value="" disabled selected>Seleccione coordinación...</option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fich_fecha_ini_lectiva" class="form-label required">Inicio Etapa Lectiva</label>
+                        <input type="date" id="fich_fecha_ini_lectiva" name="fich_fecha_ini_lectiva" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fich_fecha_fin_lectiva" class="form-label required">Fin Etapa Lectiva</label>
+                        <input type="date" id="fich_fecha_fin_lectiva" name="fich_fecha_fin_lectiva" class="form-input" required>
                     </div>
                 </div>
 

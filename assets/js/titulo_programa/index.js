@@ -18,7 +18,6 @@ class TituloProgramaView {
     cacheDOM() {
         this.tableBody = document.getElementById('titulosTableBody');
         this.searchInput = document.getElementById('searchInput');
-        this.totalTitulosEl = document.getElementById('totalTitulos');
         this.showingFrom = document.getElementById('showingFrom');
         this.showingTo = document.getElementById('showingTo');
         this.totalRecords = document.getElementById('totalRecords');
@@ -68,7 +67,7 @@ class TituloProgramaView {
     }
 
     renderStats() {
-        this.totalTitulosEl.textContent = this.titulos.length;
+        if (this.totalTitulosEl) this.totalTitulosEl.textContent = this.titulos.length;
         this.totalRecords.textContent = this.filteredTitulos.length;
 
         const start = this.filteredTitulos.length === 0 ? 0 : (this.currentPage - 1) * this.recordsPerPage + 1;
@@ -92,12 +91,7 @@ class TituloProgramaView {
 
         paginatedTitulos.forEach(t => {
             const row = document.createElement('tr');
-            row.className = 'hover:bg-green-50/50 transition-colors cursor-pointer group';
-            row.title = 'Haga clic para ver detalles';
-
-            row.onclick = () => {
-                window.location.href = `ver.php?id=${t.titpro_id}`;
-            };
+            row.className = 'hover:bg-green-50/50 transition-colors group';
 
             row.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-sena-green">
@@ -105,6 +99,20 @@ class TituloProgramaView {
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                     <div class="font-medium group-hover:text-sena-green transition-colors">${t.titpro_nombre}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex justify-center gap-2">
+                        <a href="ver.php?id=${t.titpro_id}" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Ver detalles">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <a href="editar.php?id=${t.titpro_id}" class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title="Editar">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <button onclick="tituloProgramaView.openDeleteModal(${t.titpro_id}, '${t.titpro_nombre.replace(/'/g, "\\'")}')" 
+                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Eliminar">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
                 </td>
             `;
             this.tableBody.appendChild(row);

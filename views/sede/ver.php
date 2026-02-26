@@ -52,10 +52,7 @@ require_once '../layouts/sidebar-green.php';
                     <!-- SENA Regional Card -->
                     <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
                         <div class="bg-gradient-to-br from-sena-green to-emerald-700 flex flex-col items-center text-center relative overflow-hidden h-64 justify-center">
-                            <div id="sedeFotoCard" class="absolute inset-0 hidden">
-                                <img id="sedeFotoImg" src="" alt="Sede Foto" class="w-full h-full object-cover">
-                            </div>
-                            <div id="sedeDefaultInfo" class="flex flex-col items-center px-6">
+                            <div class="flex flex-col items-center px-6">
                                 <div class="absolute inset-0 opacity-10"></div>
                                 <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-4 shadow-lg relative z-10">
                                     <svg class="w-16 h-16 text-sena-green" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

@@ -20,6 +20,7 @@ require_once '../layouts/sidebar-green.php';
                 </p>
                 
                 <div class="hero-stats">
+                    <?php if ($userRole === 'centro'): ?>
                     <div class="stat-item">
                         <i class="fa-solid fa-building"></i>
                         <div>
@@ -48,6 +49,44 @@ require_once '../layouts/sidebar-green.php';
                             <span class="stat-label">Programas</span>
                         </div>
                     </div>
+                    <?php elseif ($userRole === 'coordinador'): ?>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <div>
+                            <span class="stat-number" id="totalProgramas">0</span>
+                            <span class="stat-label">Comp x Prog</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <div>
+                            <span class="stat-number" id="totalFichas">0</span>
+                            <span class="stat-label">Fichas</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <div>
+                            <span class="stat-number" id="totalAsignaciones">0</span>
+                            <span class="stat-label">Asignaciones</span>
+                        </div>
+                    </div>
+                    <?php elseif ($userRole === 'instructor'): ?>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        <div>
+                            <span class="stat-number" id="misAsignacionesHoy">0</span>
+                            <span class="stat-label">Asignaciones Hoy</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fa-solid fa-clock"></i>
+                        <div>
+                            <span class="stat-number" id="proximasAsignaciones">0</span>
+                            <span class="stat-label">Pendientes</span>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -84,39 +123,49 @@ require_once '../layouts/sidebar-green.php';
 </main>
 
 <script>
-// Cargar estadísticas del dashboard
+// Cargar estadísticas según el rol
 document.addEventListener('DOMContentLoaded', async () => {
+    const userRole = '<?php echo $userRole; ?>';
     try {
-        // Cargar sedes
-        const sedesResponse = await fetch('../../routing.php?controller=sede&action=index', {
-            headers: { 'Accept': 'application/json' }
-        });
-        const sedes = await sedesResponse.json();
-        document.getElementById('totalSedes').textContent = Array.isArray(sedes) ? sedes.length : 0;
+        if (userRole === 'centro') {
+            // Cargar sedes
+            const sedesR = await fetch('../../routing.php?controller=sede&action=index');
+            const sedes = await sedesR.json();
+            document.getElementById('totalSedes').textContent = Array.isArray(sedes) ? sedes.length : 0;
 
-        // Cargar ambientes
-        const ambientesResponse = await fetch('../../routing.php?controller=ambiente&action=index', {
-            headers: { 'Accept': 'application/json' }
-        });
-        const ambientes = await ambientesResponse.json();
-        document.getElementById('totalAmbientes').textContent = Array.isArray(ambientes) ? ambientes.length : 0;
+            // Cargar ambientes
+            const ambR = await fetch('../../routing.php?controller=ambiente&action=index');
+            const amb = await ambR.json();
+            document.getElementById('totalAmbientes').textContent = Array.isArray(amb) ? amb.length : 0;
 
-        // Cargar competencias
-        const competenciasResponse = await fetch('../../routing.php?controller=competencia&action=index', {
-            headers: { 'Accept': 'application/json' }
-        });
-        const competencias = await competenciasResponse.json();
-        document.getElementById('totalCompetencias').textContent = Array.isArray(competencias) ? competencias.length : 0;
+            // Cargar competencias
+            const compR = await fetch('../../routing.php?controller=competencia&action=index');
+            const comp = await compR.json();
+            document.getElementById('totalCompetencias').textContent = Array.isArray(comp) ? comp.length : 0;
 
-        // Cargar programas (si existe)
-        try {
-            const programasResponse = await fetch('../../routing.php?controller=programa&action=index', {
-                headers: { 'Accept': 'application/json' }
-            });
-            const programas = await programasResponse.json();
-            document.getElementById('totalProgramas').textContent = Array.isArray(programas) ? programas.length : 0;
-        } catch (e) {
-            document.getElementById('totalProgramas').textContent = '0';
+            // Cargar programas
+            const progR = await fetch('../../routing.php?controller=programa&action=index');
+            const prog = await progR.json();
+            document.getElementById('totalProgramas').textContent = Array.isArray(prog) ? prog.length : 0;
+
+        } else if (userRole === 'coordinador') {
+            const progR = await fetch('../../routing.php?controller=programa&action=index');
+            const prog = await progR.json();
+            document.getElementById('totalProgramas').textContent = Array.isArray(prog) ? prog.length : 0;
+
+            const fichR = await fetch('../../routing.php?controller=ficha&action=index');
+            const fich = await fichR.json();
+            document.getElementById('totalFichas').textContent = Array.isArray(fich) ? fich.length : 0;
+
+            const asigR = await fetch('../../routing.php?controller=asignacion&action=index');
+            const asig = await asigR.json();
+            document.getElementById('totalAsignaciones').textContent = Array.isArray(asig) ? asig.length : 0;
+        } else if (userRole === 'instructor') {
+            // Cargar solo asignaciones del instructor
+            const asigR = await fetch('../../routing.php?controller=asignacion&action=index');
+            const asig = await asigR.json();
+            // Filtrar y contar (esto se refinará en el controlador después)
+            document.getElementById('proximasAsignaciones').textContent = Array.isArray(asig) ? asig.length : 0;
         }
 
     } catch (error) {

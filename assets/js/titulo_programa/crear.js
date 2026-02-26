@@ -42,6 +42,8 @@ class CrearTitulo {
             if (result.message) {
                 if (window.NotificationService) {
                     NotificationService.show(result.message, 'success');
+                } else {
+                    alert(result.message);
                 }
                 setTimeout(() => {
                     window.location.href = 'index.php';
@@ -53,6 +55,8 @@ class CrearTitulo {
             console.error('Error creating titulo:', error);
             if (window.NotificationService) {
                 NotificationService.show(error.message, 'error');
+            } else {
+                alert(error.message);
             }
         }
     }

@@ -91,9 +91,19 @@ class EditarFicha {
             if (data.error) throw new Error(data.error);
 
             this.programaSelect.value = data.programa_prog_id;
-            this.instructorSelect.value = data.instructor_inst_id;
+            // El backend retorna INSTRUCTOR_inst_id_lider y no instructor_inst_id
+            this.instructorSelect.value = data.instructor_inst_id_lider || data.instructor_inst_id;
             this.jornadaSelect.value = data.fich_jornada;
-            this.coordinacionSelect.value = data.coordinacion_coord_id;
+            this.coordinacionSelect.value = data.coordinacion_coord_id || data.coordinacion_coord_id;
+
+            // Cargar fechas
+            if (document.getElementById('fich_fecha_ini_lectiva')) {
+                document.getElementById('fich_fecha_ini_lectiva').value = data.fich_fecha_ini_lectiva || '';
+            }
+            if (document.getElementById('fich_fecha_fin_lectiva')) {
+                document.getElementById('fich_fecha_fin_lectiva').value = data.fich_fecha_fin_lectiva || '';
+            }
+
         } catch (error) {
             console.error('Error loading ficha data:', error);
             this.showError('Error al cargar datos de la ficha');

@@ -89,7 +89,6 @@ require_once '../layouts/sidebar-green.php';
         <div class="modal-footer">
             <button class="btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
             <button class="btn-danger" onclick="confirmDelete()">Eliminar</button>
-        </div>
     </div>
 </div>
 

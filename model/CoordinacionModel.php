@@ -8,17 +8,15 @@ class CoordinacionModel
     private $centro_formacion_cent_id;
     private $coord_nombre_coordinador;
     private $coord_correo;
-    private $coord_password;
     private $db;
 
-    public function __construct($coord_id = null, $coord_descripcion = null, $centro_formacion_cent_id = null, $coord_nombre_coordinador = null, $coord_correo = null, $coord_password = null)
+    public function __construct($coord_id = null, $coord_descripcion = null, $centro_formacion_cent_id = null, $coord_nombre_coordinador = null, $coord_correo = null)
     {
         $this->coord_id = $coord_id;
         $this->coord_descripcion = $coord_descripcion;
         $this->centro_formacion_cent_id = $centro_formacion_cent_id;
         $this->coord_nombre_coordinador = $coord_nombre_coordinador;
         $this->coord_correo = $coord_correo;
-        $this->coord_password = $coord_password;
         $this->db = Conexion::getConnect();
     }
 
@@ -38,10 +36,6 @@ class CoordinacionModel
     public function getCoordCorreo() { return $this->coord_correo; }
     public function setCoordCorreo($coord_correo) { $this->coord_correo = $coord_correo; }
 
-    public function getCoordPassword() { return $this->coord_password; }
-    public function setCoordPassword($coord_password) { $this->coord_password = $coord_password; }
-
-    // CRUD
     public function create()
     {
         $query = "INSERT INTO coordinacion (coord_descripcion, centro_formacion_cent_id, coord_nombre_coordinador, coord_correo, coord_password) 
@@ -51,7 +45,10 @@ class CoordinacionModel
         $stmt->bindParam(':centro_formacion_cent_id', $this->centro_formacion_cent_id);
         $stmt->bindParam(':coord_nombre_coordinador', $this->coord_nombre_coordinador);
         $stmt->bindParam(':coord_correo', $this->coord_correo);
-        $stmt->bindParam(':coord_password', $this->coord_password);
+        
+        $defaultPassword = password_hash('admin123', PASSWORD_DEFAULT);
+        $stmt->bindParam(':coord_password', $defaultPassword);
+        
         $stmt->execute();
         return $this->db->lastInsertId();
     }
@@ -85,16 +82,23 @@ class CoordinacionModel
                   SET coord_descripcion = :coord_descripcion, 
                       centro_formacion_cent_id = :centro_formacion_cent_id,
                       coord_nombre_coordinador = :coord_nombre_coordinador,
-                      coord_correo = :coord_correo,
-                      coord_password = :coord_password
+                      coord_correo = :coord_correo
                   WHERE coord_id = :coord_id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':coord_descripcion', $this->coord_descripcion);
         $stmt->bindParam(':centro_formacion_cent_id', $this->centro_formacion_cent_id);
         $stmt->bindParam(':coord_nombre_coordinador', $this->coord_nombre_coordinador);
         $stmt->bindParam(':coord_correo', $this->coord_correo);
-        $stmt->bindParam(':coord_password', $this->coord_password);
         $stmt->bindParam(':coord_id', $this->coord_id);
+        return $stmt->execute();
+    }
+
+    public function updatePassword($id, $hashed_password)
+    {
+        $query = "UPDATE coordinacion SET coord_password = :coord_password WHERE coord_id = :coord_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':coord_password', $hashed_password);
+        $stmt->bindParam(':coord_id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 

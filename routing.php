@@ -16,11 +16,11 @@ $controllers = array(
     'programa' => ['index', 'show', 'store', 'update', 'destroy', 'getTitulos', 'getCompetencias', 'getCompetenciasDisponibles', 'asociarCompetencia', 'desasociarCompetencia', 'asociarCompetencias'],
     'titulo_programa' => ['index', 'show', 'store', 'update', 'destroy'],
     'ficha' => ['index', 'show', 'store', 'update', 'destroy', 'getProgramas', 'getInstructores', 'getCoordinaciones'],
-    'instructor' => ['index', 'show', 'store', 'update', 'destroy'],
-    'asignacion' => ['index', 'store', 'destroy', 'getFichaInfo', 'getAsignacionesByFicha', 'getCompetenciasPendientes', 'getInstructoresByCompetencia'],
+    'instructor' => ['index', 'show', 'store', 'update', 'destroy', 'getProgramas', 'getCompetenciasInstructorPrograma'],
+    'asignacion' => ['index', 'store', 'destroy', 'getFichaInfo', 'getAsignacionesByFicha', 'getCompetenciasPendientes', 'getInstructoresByCompetencia', 'getEventos', 'getInstructoresList', 'getAmbientesList', 'getCompetenciasByPrograma', 'getCompetenciasList'],
     'coordinacion' => ['index', 'show', 'store', 'update', 'destroy', 'getCentros'],
     'centro_formacion' => ['index', 'show', 'store', 'update', 'destroy'],
-    // Agrega más controladores y acciones aquí si lo necesitas
+    'auth' => ['login', 'logout']
 );
 
 // Obtener controlador y acción buscando en GET y POST
@@ -91,6 +91,8 @@ function call($controller, $action)
             require_once('model/FichaModel.php');
             require_once('model/InstructorModel.php');
             require_once('model/CompetenciaModel.php');
+            require_once('model/AmbienteModel.php');
+            require_once('model/DetalleAsignacionModel.php');
             $controllerObj = new AsignacionController();
             break;
         case 'coordinacion':
@@ -102,6 +104,11 @@ function call($controller, $action)
             require_once('model/CentroFormacionModel.php');
             $controllerObj = new CentroFormacionController();
             break;
+        case 'auth':
+            require_once('controller/AuthController.php');
+            $controllerObj = new AuthController();
+            break;
+
         default:
             http_response_code(404);
             echo "<h1>Error 404: Controlador no encontrado</h1>";

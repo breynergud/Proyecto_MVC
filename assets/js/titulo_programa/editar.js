@@ -64,6 +64,8 @@ class EditarTitulo {
             if (result.message) {
                 if (window.NotificationService) {
                     NotificationService.show(result.message, 'success');
+                } else {
+                    alert(result.message);
                 }
                 setTimeout(() => {
                     window.location.href = 'index.php';
@@ -75,6 +77,8 @@ class EditarTitulo {
             console.error('Error updating titulo:', error);
             if (window.NotificationService) {
                 NotificationService.show(error.message, 'error');
+            } else {
+                alert(error.message);
             }
         }
     }

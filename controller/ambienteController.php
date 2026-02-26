@@ -60,6 +60,7 @@ class AmbienteController
             $id = $_POST['amb_id'] ?? null;
             $nombre = $_POST['amb_nombre'] ?? null;
             $sede_id = $_POST['sede_sede_id'] ?? null;
+            $tipo = $_POST['tipo_ambiente'] ?? 'Convencional';
 
             if (!$id || !$nombre || !$sede_id) {
                 $this->sendResponse(['error' => 'ID (5 caracteres), Nombre y Sede son obligatorios'], 400);
@@ -75,6 +76,7 @@ class AmbienteController
             $this->model->setAmbId($id);
             $this->model->setAmbnombre($nombre);
             $this->model->setSedeSedeId($sede_id);
+            $this->model->setTipoAmbiente($tipo);
             $newId = $this->model->create();
 
             if ($newId) {
@@ -98,6 +100,7 @@ class AmbienteController
             $id = $_POST['amb_id'] ?? null;
             $nombre = $_POST['amb_nombre'] ?? null;
             $sede_id = $_POST['sede_sede_id'] ?? null;
+            $tipo = $_POST['tipo_ambiente'] ?? 'Convencional';
 
             if (!$id || !$nombre || !$sede_id) {
                 $this->sendResponse(['error' => 'ID, Nombre y Sede son obligatorios'], 400);
@@ -107,6 +110,7 @@ class AmbienteController
             $this->model->setAmbId($id);
             $this->model->setAmbnombre($nombre);
             $this->model->setSedeSedeId($sede_id);
+            $this->model->setTipoAmbiente($tipo);
 
             if ($this->model->update()) {
                 $this->sendResponse(['message' => 'Ambiente actualizado correctamente']);

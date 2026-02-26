@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const query = searchInput.value.toLowerCase();
         const filtered = centros.filter(c =>
             c.cent_nombre.toLowerCase().includes(query) ||
+            (c.cent_correo && c.cent_correo.toLowerCase().includes(query)) ||
             String(c.cent_id).includes(query)
         );
 
@@ -52,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         tableBody.innerHTML = '';
         if (paginated.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="3" class="text-center p-8 text-gray-500">No se encontraron centros</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="4" class="text-center p-8 text-gray-500">No se encontraron centros</td></tr>';
         } else {
             paginated.forEach(c => {
                 const tr = document.createElement('tr');
@@ -62,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 tr.innerHTML = `
                     <td class="font-semibold text-sena-green">${String(c.cent_id).padStart(3, '0')}</td>
                     <td class="font-medium text-slate-900">${c.cent_nombre}</td>
+                    <td class="text-gray-600">${c.cent_correo || '-'}</td>
                     <td class="text-center">
                         <div class="flex items-center justify-center gap-2">
                              <a href="editar.php?id=${c.cent_id}" class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-400 hover:text-sena-orange transition-all" title="Editar" onclick="event.stopPropagation()">

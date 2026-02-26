@@ -39,6 +39,7 @@ require_once '../layouts/sidebar-green.php';
                     <tr>
                         <th class="w-10 text-sena-green font-bold">ID</th>
                         <th>Nombre del Centro de Formación</th>
+                        <th>Correo Electrónico</th>
                         <th class="w-15 text-center">Acciones</th>
                     </tr>
                 </thead>

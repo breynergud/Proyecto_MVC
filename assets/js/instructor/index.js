@@ -104,7 +104,7 @@ class InstructorManager {
         } else {
             const term = searchTerm.toLowerCase();
             this.filteredInstructores = this.instructores.filter(inst =>
-                inst.inst_nombre.toLowerCase().includes(term) ||
+                inst.inst_nombres.toLowerCase().includes(term) ||
                 inst.inst_apellidos.toLowerCase().includes(term) ||
                 inst.inst_correo.toLowerCase().includes(term)
             );
@@ -146,7 +146,7 @@ class InstructorManager {
             row.setAttribute('onclick', `window.location.href='editar.php?id=${inst.inst_id}'`);
             row.title = 'Haga clic para editar';
 
-            const nombreCompleto = `${inst.inst_nombre} ${inst.inst_apellidos}`;
+            const nombreCompleto = `${inst.inst_nombres} ${inst.inst_apellidos}`;
 
             row.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-sena-green">

@@ -16,6 +16,7 @@ class EditarPrograma {
     async init() {
         this.cacheDOM();
         this.bindEvents();
+        this.titulosData = [];
         await this.loadTitulos();
         await this.loadProgramaData();
         await this.loadCompetencias();
@@ -38,10 +39,37 @@ class EditarPrograma {
 
     bindEvents() {
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        this.tipoSelect.addEventListener('change', () => this.syncTitleWithType());
 
         if (this.searchCompetencia) {
             this.searchCompetencia.addEventListener('input', (e) => this.handleSearchCompetencia(e.target.value));
             this.searchCompetencia.addEventListener('focus', () => this.loadCompetenciasDisponibles());
+        }
+    }
+
+    syncTitleWithType() {
+        const selectedType = this.tipoSelect.value;
+        if (!selectedType || !this.titulosData.length) return;
+
+        const normalize = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+
+        const normType = normalize(selectedType);
+        const matchingTitulo = this.titulosData.find(t => normalize(t.titpro_nombre) === normType);
+
+        if (matchingTitulo) {
+            this.tituloSelect.value = matchingTitulo.titpro_id;
+            console.log(`Sincronizado: ${selectedType} -> ID ${matchingTitulo.titpro_id}`);
+        } else {
+            console.warn(`No se encontró un título que coincida exactamente con: ${selectedType}`);
+            // Fallback: búsqueda parcial
+            const partialMatch = this.titulosData.find(t =>
+                normalize(t.titpro_nombre).includes(normType) ||
+                normType.includes(normalize(t.titpro_nombre))
+            );
+            if (partialMatch) {
+                this.tituloSelect.value = partialMatch.titpro_id;
+                console.log(`Sincronizado (parcial): ${selectedType} -> ID ${partialMatch.titpro_id}`);
+            }
         }
     }
 
@@ -52,15 +80,7 @@ class EditarPrograma {
             });
 
             const text = await response.text();
-            let titulos = JSON.parse(text);
-
-            this.tituloSelect.innerHTML = '<option value="" disabled>Seleccione un título...</option>';
-            titulos.forEach(t => {
-                const option = document.createElement('option');
-                option.value = t.titpro_id;
-                option.textContent = t.titpro_nombre;
-                this.tituloSelect.appendChild(option);
-            });
+            this.titulosData = JSON.parse(text);
         } catch (error) {
             console.error('Error loading titulos:', error);
             this.showError('Error al cargar los títulos');
@@ -249,6 +269,15 @@ class EditarPrograma {
 
     async handleSubmit(e) {
         e.preventDefault();
+
+        // Ensure title ID is set
+        if (!this.tituloSelect.value) {
+            this.syncTitleWithType();
+            if (!this.tituloSelect.value) {
+                this.showError('No se pudo determinar el título académico. Verifique el Tipo de Programa.');
+                return;
+            }
+        }
 
         const formData = new FormData(this.form);
         formData.append('controller', 'programa');

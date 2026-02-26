@@ -1,50 +1,60 @@
 class AsignacionCalendario {
     constructor() {
+        this.viewDate = new Date();
         this.fichaActual = null;
-        this.currentDate = new Date();
-        this.asignaciones = [];
-        this.competenciasPendientes = [];
-        this.instructoresDisponibles = [];
-        this.selectedDate = null;
-        this.selectedInstructor = null;
-        this.ambientes = [];
+        this.events = [];
+        this.createModal = null;
+        this.viewModal = null;
 
         this.init();
     }
 
     async init() {
         this.cacheDOM();
+        this.initModals();
         this.bindEvents();
-        await this.loadAmbientes();
+        this.renderCalendar();
+        await this.preloadModalData();
     }
 
     cacheDOM() {
-        // Búsqueda
         this.fichaSearch = document.getElementById('searchFicha');
         this.btnBuscarFicha = document.getElementById('btnBuscarFicha');
         this.fichaInfo = document.getElementById('fichaInfo');
         this.fichaNumero = document.getElementById('fichaNumero');
         this.fichaProgramaNombre = document.getElementById('fichaProgramaNombre');
-        this.fichaJornada = document.getElementById('fichaJornada');
-        this.fichaInstructor = document.getElementById('fichaInstructor');
-
-        // Calendario
         this.calendarioContainer = document.getElementById('calendarioContainer');
-        this.mesAnio = document.getElementById('mesAnio');
-        this.calendarioDias = document.getElementById('calendarioDias');
+
+        // Elementos Calendario
+        this.monthDisplay = document.getElementById('monthDisplay');
+        this.calendarGrid = document.getElementById('calendarGrid');
         this.btnPrevMonth = document.getElementById('btnPrevMonth');
         this.btnNextMonth = document.getElementById('btnNextMonth');
+        this.btnToday = document.getElementById('btnToday');
 
-        // Modal
-        this.asignacionModal = document.getElementById('asignacionModal');
-        this.selectedDateEl = document.getElementById('selectedDate');
-        this.competenciaSelect = document.getElementById('competenciaSelect');
-        this.ambienteSelect = document.getElementById('ambienteSelect');
-        this.horaInicio = document.getElementById('horaInicio');
-        this.horaFin = document.getElementById('horaFin');
-        this.instructoresSection = document.getElementById('instructoresSection');
-        this.instructoresList = document.getElementById('instructoresList');
-        this.btnGuardarAsignacion = document.getElementById('btnGuardarAsignacion');
+        // Modal crear
+        this.createForm = document.getElementById('createAssignmentForm');
+        this.btnGuardar = document.getElementById('btnGuardarNuevaAsignacion');
+        this.modalFichaId = document.getElementById('modalFichaId');
+        this.modalFechaInicio = document.getElementById('modalFechaInicio');
+        this.modalHoraInicio = document.getElementById('modalHoraInicio');
+        this.modalFechaFin = document.getElementById('modalFechaFin');
+        this.modalHoraFin = document.getElementById('modalHoraFin');
+        this.selectInstructor = document.getElementById('modalInstructor');
+        this.selectAmbiente = document.getElementById('modalAmbiente');
+        this.selectCompetencia = document.getElementById('modalCompetencia');
+
+        // Modal ver
+        this.viewDetailCompetencia = document.getElementById('viewDetailCompetencia');
+        this.viewDetailInstructor = document.getElementById('viewDetailInstructor');
+        this.viewDetailInicio = document.getElementById('viewDetailInicio');
+        this.viewDetailFin = document.getElementById('viewDetailFin');
+        this.btnEliminar = document.getElementById('btnEliminarAsignacion');
+    }
+
+    initModals() {
+        this.createModal = new bootstrap.Modal(document.getElementById('createAssignmentModal'));
+        this.viewModal = new bootstrap.Modal(document.getElementById('viewAssignmentModal'));
     }
 
     bindEvents() {
@@ -52,344 +62,284 @@ class AsignacionCalendario {
         this.fichaSearch.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.buscarFicha();
         });
+        this.btnGuardar.addEventListener('click', () => this.guardarAsignacion());
 
-        this.btnPrevMonth.addEventListener('click', () => this.cambiarMes(-1));
-        this.btnNextMonth.addEventListener('click', () => this.cambiarMes(1));
+        // Navegación Calendario
+        this.btnPrevMonth.addEventListener('click', () => {
+            this.viewDate.setMonth(this.viewDate.getMonth() - 1);
+            this.renderCalendar();
+        });
+        this.btnNextMonth.addEventListener('click', () => {
+            this.viewDate.setMonth(this.viewDate.getMonth() + 1);
+            this.renderCalendar();
+        });
+        this.btnToday.addEventListener('click', () => {
+            this.viewDate = new Date();
+            this.renderCalendar();
+        });
 
-        this.competenciaSelect.addEventListener('change', () => this.onCompetenciaChange());
-        this.btnGuardarAsignacion.addEventListener('click', () => this.guardarAsignacion());
+        // Listener para cambio de competencia
+        this.selectCompetencia.addEventListener('change', () => this.onCompetenciaChange());
     }
 
-    async loadAmbientes() {
-        try {
-            const response = await fetch('../../routing.php?controller=ambiente&action=index');
-            this.ambientes = await response.json();
-            this.renderAmbientes();
-        } catch (error) {
-            console.error('Error loading ambientes:', error);
+    async renderCalendar() {
+        if (!this.calendarGrid) return;
+
+        this.calendarGrid.innerHTML = '';
+        const year = this.viewDate.getFullYear();
+        const month = this.viewDate.getMonth();
+
+        // Mostrar mes y año
+        const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+        this.monthDisplay.textContent = `${monthNames[month]} ${year}`;
+
+        // Primer día del mes y total de días
+        const firstDay = new Date(year, month, 1).getDay(); // 0 (Dom) a 6 (Sab)
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // Ajustar primer día para que empiece en lunes (0=Lun, 6=Dom)
+        let emptyStartingCells = firstDay === 0 ? 6 : firstDay - 1;
+
+        // Días del mes anterior (para completar la primera fila si se desea, o solo espacios vacíos)
+        for (let i = 0; i < emptyStartingCells; i++) {
+            const div = document.createElement('div');
+            div.className = 'calendar-day other-month';
+            this.calendarGrid.appendChild(div);
+        }
+
+        // Días del mes actual
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const isToday = new Date().toDateString() === new Date(year, month, day).toDateString();
+
+            const dayCell = document.createElement('div');
+            dayCell.className = `calendar-day ${isToday ? 'today' : ''}`;
+            dayCell.innerHTML = `<span class="day-number">${day}</span><div class="event-list" id="events-${dateStr}"></div>`;
+
+            dayCell.addEventListener('click', (e) => {
+                if (e.target.closest('.event-item')) return; // No abrir creación si se hace clic en evento
+                this.onDateClick(dateStr);
+            });
+
+            this.calendarGrid.appendChild(dayCell);
+        }
+
+        // Renderizar eventos si hay una ficha seleccionada
+        if (this.fichaActual) {
+            await this.fetchAndRenderEvents();
         }
     }
 
-    renderAmbientes() {
-        this.ambienteSelect.innerHTML = '<option value="">Seleccione un ambiente...</option>';
-        this.ambientes.forEach(amb => {
+    async fetchAndRenderEvents() {
+        try {
+            const response = await fetch(`../../routing.php?controller=asignacion&action=getEventos&ficha_id=${this.fichaActual.fich_id}`);
+            this.events = await response.json();
+
+            this.events.forEach(event => {
+                // Parse dates in local timezone to avoid weird UTC offset shifts missing the last day
+                const startStr = event.start.split(' ')[0]; // Take only YYYY-MM-DD
+                const endStr = (event.end || event.start).split(' ')[0];
+
+                const [sY, sM, sD] = startStr.split('-').map(Number);
+                const [eY, eM, eD] = endStr.split('-').map(Number);
+
+                // Use local timezone manually
+                let current = new Date(sY, sM - 1, sD);
+                const endDay = new Date(eY, eM - 1, eD);
+
+                while (current <= endDay) {
+                    const y = current.getFullYear();
+                    const m = String(current.getMonth() + 1).padStart(2, '0');
+                    const d = String(current.getDate()).padStart(2, '0');
+                    const dateStr = `${y}-${m}-${d}`;
+
+                    const listContainer = document.getElementById(`events-${dateStr}`);
+
+                    if (listContainer) {
+                        const eventEl = document.createElement('div');
+                        eventEl.className = 'event-item';
+                        eventEl.textContent = event.title;
+                        eventEl.title = `${event.title} - ${event.instructor}`;
+                        eventEl.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            this.onEventClick(event);
+                        });
+                        listContainer.appendChild(eventEl);
+                    }
+
+                    // Avanzar al siguiente día
+                    current.setDate(current.getDate() + 1);
+                }
+            });
+        } catch (error) {
+            console.error('Error rendering events:', error);
+        }
+    }
+
+    async preloadModalData() {
+        try {
+            const results = await Promise.allSettled([
+                this.fetchData('../../routing.php?controller=asignacion&action=getAmbientesList'),
+                this.fetchData('../../routing.php?controller=asignacion&action=getInstructoresList')
+            ]);
+
+            if (results[0].status === 'fulfilled') this.fillSelect(this.selectAmbiente, results[0].value);
+            if (results[1].status === 'fulfilled') this.fillSelect(this.selectInstructor, results[1].value);
+        } catch (error) {
+            console.error('Error preloading data:', error);
+        }
+    }
+
+    async fetchData(url) {
+        const response = await fetch(url);
+        const text = await response.text();
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error('Response is not valid JSON:', text);
+            throw new Error('Respuesta del servidor no válida (JSON esperado)');
+        }
+
+        // Si el JSON trae un error explícito desde PHP, lo mostramos (ej: "Ficha no encontrada")
+        if (data && data.error) {
+            throw new Error(data.error);
+        }
+
+        // Si falla por otra cosa (ej: 500 fatal sin JSON)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return data;
+    }
+
+    async onCompetenciaChange() {
+        const competenciaId = this.selectCompetencia.value;
+        if (!competenciaId) {
+            // No limpiamos los instructores si no hay competencia, 
+            // dejamos los que están (todos) o volvemos a cargar todos
+            this.preloadModalData();
+            return;
+        }
+
+        try {
+            const programaId = this.fichaActual.prog_codigo;
+            const data = await this.fetchData(`../../routing.php?controller=asignacion&action=getInstructoresByCompetencia&competencia_id=${competenciaId}&programa_id=${programaId}`);
+            this.fillSelect(this.selectInstructor, data);
+        } catch (error) {
+            console.error('Error filtering instructors:', error);
+            this.showNotification('No se pudieron filtrar los instructores', 'warning');
+        }
+    }
+
+    fillSelect(select, data) {
+        if (!select) return;
+        select.innerHTML = '<option value="">Seleccione una opción...</option>';
+
+        if (!Array.isArray(data)) {
+            console.error('Data for select is not an array:', data);
+            return;
+        }
+
+        data.forEach(item => {
             const option = document.createElement('option');
-            option.value = amb.amb_id;
-            option.textContent = `${amb.amb_nombre} - ${amb.sede_nombre}`;
-            this.ambienteSelect.appendChild(option);
+            // Mapeo flexible de propiedades según lo que devuelva el modelo/controlador
+            const id = item.id || item.amb_id || item.inst_id || item.comp_id || item.prog_codigo;
+            const nombre = item.nombre || item.amb_nombre || item.comp_nombre_corto || item.prog_denominacion || (item.inst_nombres ? `${item.inst_nombres} ${item.inst_apellidos}` : '');
+
+            option.value = id;
+            option.textContent = nombre || 'Sin nombre';
+            select.appendChild(option);
         });
     }
 
     async buscarFicha() {
         const fichaId = this.fichaSearch.value.trim();
-
         if (!fichaId) {
-            this.showNotification('Por favor ingrese un número de ficha', 'warning');
+            this.showNotification('Ingrese un número de ficha', 'warning');
             return;
         }
 
         try {
-            const response = await fetch(`../../routing.php?controller=asignacion&action=getFichaInfo&ficha_id=${fichaId}`);
-            const data = await response.json();
-
-            if (data.error) {
-                this.showNotification(data.error, 'error');
-                return;
-            }
+            const data = await this.fetchData(`../../routing.php?controller=asignacion&action=getFichaInfo&ficha_id=${fichaId}`);
 
             this.fichaActual = data;
             this.mostrarInfoFicha();
-            await this.cargarAsignaciones();
-            this.renderCalendario();
             this.calendarioContainer.style.display = 'block';
+
+            // Cargar TODAS las competencias (Técnicas y Transversales) 
+            try {
+                const competencias = await this.fetchData(`../../routing.php?controller=asignacion&action=getCompetenciasList`);
+                this.fillSelect(this.selectCompetencia, competencias);
+            } catch (compErr) {
+                console.error('Error loading competencies:', compErr);
+                this.showNotification('No se pudieron cargar las competencias del programa', 'warning');
+            }
+
+            if (data.fich_fecha_ini_lectiva) {
+                this.viewDate = new Date(data.fich_fecha_ini_lectiva);
+            }
+            this.renderCalendar();
         } catch (error) {
             console.error('Error buscando ficha:', error);
-            this.showNotification('Error al buscar la ficha', 'error');
+            this.showNotification(error.message || 'Error al buscar la ficha', 'error');
         }
     }
 
     mostrarInfoFicha() {
         this.fichaNumero.textContent = `Ficha #${this.fichaActual.fich_id}`;
         this.fichaProgramaNombre.textContent = this.fichaActual.programa_nombre;
-        this.fichaJornada.textContent = this.fichaActual.fich_jornada || 'N/A';
-        this.fichaInstructor.textContent = `${this.fichaActual.instructor_nombre}`;
         this.fichaInfo.style.display = 'block';
     }
 
-    async cargarAsignaciones() {
-        try {
-            const response = await fetch(`../../routing.php?controller=asignacion&action=getAsignacionesByFicha&ficha_id=${this.fichaActual.fich_id}`);
-            this.asignaciones = await response.json();
-        } catch (error) {
-            console.error('Error cargando asignaciones:', error);
-            this.asignaciones = [];
-        }
-    }
-
-    cambiarMes(direccion) {
-        this.currentDate.setMonth(this.currentDate.getMonth() + direccion);
-        this.renderCalendario();
-    }
-
-    renderCalendario() {
-        const year = this.currentDate.getFullYear();
-        const month = this.currentDate.getMonth();
-
-        // Actualizar título
-        const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-        this.mesAnio.textContent = `${meses[month]} ${year}`;
-
-        // Obtener primer y último día del mes
-        const primerDia = new Date(year, month, 1);
-        const ultimoDia = new Date(year, month + 1, 0);
-
-        // Días a mostrar antes del primer día del mes
-        const diasAntes = primerDia.getDay();
-
-        // Limpiar calendario
-        this.calendarioDias.innerHTML = '';
-
-        // Días del mes anterior
-        const ultimoDiaMesAnterior = new Date(year, month, 0).getDate();
-        for (let i = diasAntes - 1; i >= 0; i--) {
-            const dia = ultimoDiaMesAnterior - i;
-            this.renderDia(dia, true, new Date(year, month - 1, dia));
-        }
-
-        // Días del mes actual
-        for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {
-            this.renderDia(dia, false, new Date(year, month, dia));
-        }
-
-        // Días del mes siguiente
-        const diasDespues = 42 - (diasAntes + ultimoDia.getDate());
-        for (let dia = 1; dia <= diasDespues; dia++) {
-            this.renderDia(dia, true, new Date(year, month + 1, dia));
-        }
-    }
-
-    renderDia(numero, otroMes, fecha) {
-        const diaCell = document.createElement('div');
-        diaCell.className = `dia-cell ${otroMes ? 'otro-mes' : ''}`;
-
-        const diaNumero = document.createElement('div');
-        diaNumero.className = 'dia-numero';
-        diaNumero.textContent = numero;
-        diaCell.appendChild(diaNumero);
-
-        // Restricción de fecha: No permitir fechas anteriores a la fecha de inicio de la ficha
-        let isDateDisabled = false;
-        if (this.fichaActual && this.fichaActual.fich_fecha_ini_lectiva) {
-            const fechaIniFicha = new Date(this.fichaActual.fich_fecha_ini_lectiva);
-            // Normalizar fechas para comparar solo año-mes-día
-            const f1 = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
-            const f2 = new Date(fechaIniFicha.getFullYear(), fechaIniFicha.getMonth(), fechaIniFicha.getDate());
-
-            if (f1 < f2) {
-                isDateDisabled = true;
-                diaCell.classList.add('disabled');
-            }
-
-            if (this.fichaActual.fich_fecha_fin_lectiva) {
-                const fechaFinFicha = new Date(this.fichaActual.fich_fecha_fin_lectiva);
-                const f3 = new Date(fechaFinFicha.getFullYear(), fechaFinFicha.getMonth(), fechaFinFicha.getDate());
-                if (f1 > f3) {
-                    isDateDisabled = true;
-                    diaCell.classList.add('disabled');
-                }
-            }
-        }
-
-        // Buscar asignaciones para este día
-        if (!otroMes && this.fichaActual) {
-            const asignacionesDelDia = this.asignaciones.filter(asig => {
-                const asigFecha = new Date(asig.asig_fecha_ini);
-                return asigFecha.toDateString() === fecha.toDateString();
-            });
-
-            asignacionesDelDia.forEach(asig => {
-                const asigItem = document.createElement('div');
-                asigItem.className = 'asignacion-item';
-
-                // Formatear hora (HH:mm)
-                const hora = new Date(asig.asig_fecha_ini).toLocaleTimeString('es-ES', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-
-                asigItem.textContent = `${hora} - ${asig.competencia_nombre}`;
-                asigItem.title = `${asig.competencia_nombre} \nInstructor: ${asig.instructor_nombre}\nAmbiente: ${asig.ambiente_nombre}\nHorario: ${hora}`;
-
-                // Botón de eliminar
-                const btnEliminar = document.createElement('button');
-                btnEliminar.className = 'btn-delete-asig';
-                btnEliminar.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-                btnEliminar.onclick = (e) => {
-                    e.stopPropagation();
-                    this.confirmarEliminarAsignacion(asig.asig_id);
-                };
-                asigItem.appendChild(btnEliminar);
-
-                diaCell.appendChild(asigItem);
-            });
-        }
-
-        // Click para crear asignación (solo si no está deshabilitado)
-        if (!otroMes && !isDateDisabled) {
-            diaCell.addEventListener('click', () => this.abrirModalAsignacion(fecha));
-        }
-
-        this.calendarioDias.appendChild(diaCell);
-    }
-
-    async abrirModalAsignacion(fecha) {
-        if (!this.fichaActual) return;
-
-        this.selectedDate = fecha;
-        const fechaStr = fecha.toLocaleDateString('es-ES', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-        this.selectedDateEl.textContent = fechaStr.charAt(0).toUpperCase() + fechaStr.slice(1);
-
-        // Cargar competencias pendientes
-        await this.cargarCompetenciasPendientes();
-
-        this.asignacionModal.classList.add('active');
-    }
-
-    closeAsignacionModal() {
-        this.asignacionModal.classList.remove('active');
-        this.competenciaSelect.value = '';
-        this.ambienteSelect.value = '';
-        this.instructoresSection.style.display = 'none';
-        this.instructoresList.innerHTML = '';
-        this.selectedInstructor = null;
-        this.btnGuardarAsignacion.disabled = true;
-    }
-
-    async cargarCompetenciasPendientes() {
-        try {
-            const response = await fetch(`../../routing.php?controller=asignacion&action=getCompetenciasPendientes&ficha_id=${this.fichaActual.fich_id}`);
-            this.competenciasPendientes = await response.json();
-
-            this.competenciaSelect.innerHTML = '<option value="">Seleccione una competencia...</option>';
-
-            if (this.competenciasPendientes.length === 0) {
-                const option = document.createElement('option');
-                option.textContent = 'No hay competencias pendientes';
-                option.disabled = true;
-                this.competenciaSelect.appendChild(option);
-            } else {
-                this.competenciasPendientes.forEach(comp => {
-                    const option = document.createElement('option');
-                    option.value = comp.comp_id;
-                    option.textContent = `${comp.comp_nombre_corto} (${comp.comp_horas}h)`;
-                    this.competenciaSelect.appendChild(option);
-                });
-            }
-        } catch (error) {
-            console.error('Error cargando competencias pendientes:', error);
-        }
-    }
-
-    async onCompetenciaChange() {
-        const competenciaId = this.competenciaSelect.value;
-
-        if (!competenciaId) {
-            this.instructoresSection.style.display = 'none';
-            this.btnGuardarAsignacion.disabled = true;
+    async onDateClick(dateStr) {
+        if (!this.fichaActual) {
+            this.showNotification('Primero busque una ficha', 'info');
             return;
         }
 
-        // Cargar instructores especializados
-        await this.cargarInstructoresEspecializados(competenciaId);
-    }
-
-    async cargarInstructoresEspecializados(competenciaId) {
+        // Refrescar datos antes de mostrar el modal
         try {
-            const programaId = this.fichaActual.prog_codigo; // Usamos prog_codigo que es la PK en programa
-            const response = await fetch(`../../routing.php?controller=asignacion&action=getInstructoresByCompetencia&competencia_id=${competenciaId}&programa_id=${programaId}`);
-            this.instructoresDisponibles = await response.json();
-
-            this.renderInstructores();
-            this.instructoresSection.style.display = 'block';
+            await this.preloadModalData();
+            const competencias = await this.fetchData(`../../routing.php?controller=asignacion&action=getCompetenciasByPrograma&programa_id=${this.fichaActual.prog_codigo}`);
+            this.fillSelect(this.selectCompetencia, competencias);
         } catch (error) {
-            console.error('Error cargando instructores:', error);
-            this.instructoresDisponibles = [];
-        }
-    }
-
-    renderInstructores() {
-        this.instructoresList.innerHTML = '';
-
-        if (this.instructoresDisponibles.length === 0) {
-            this.instructoresList.innerHTML = '<p class="text-center text-gray-500" style="padding: 20px;">No hay instructores especializados en esta competencia</p>';
-            return;
+            console.error('Error refreshing modal data:', error);
         }
 
-        this.instructoresDisponibles.forEach(inst => {
-            const card = document.createElement('div');
-            card.className = 'instructor-card';
-            card.onclick = () => this.seleccionarInstructor(inst.inst_id, card);
+        this.createForm.reset();
+        this.modalFichaId.value = this.fichaActual.fich_id;
 
-            card.innerHTML = `
-                <div class="instructor-info">
-                    <div class="instructor-nombre">${inst.inst_nombres} ${inst.inst_apellidos}</div>
-                    <div class="instructor-detalles">
-                        ${inst.inst_correo || 'Sin correo'} • ${inst.centro_nombre || 'Sin centro'}
-                    </div>
-                </div>
-                <input type="radio" name="instructor" value="${inst.inst_id}" class="instructor-radio">
-            `;
+        this.modalFechaInicio.value = dateStr;
+        this.modalHoraInicio.value = "07:00";
+        this.modalFechaFin.value = dateStr;
+        this.modalHoraFin.value = "08:00";
 
-            this.instructoresList.appendChild(card);
-        });
+        this.createModal.show();
     }
 
-    seleccionarInstructor(instructorId, cardElement) {
-        // Remover selección anterior
-        document.querySelectorAll('.instructor-card').forEach(card => {
-            card.classList.remove('selected');
-        });
+    onEventClick(event) {
+        this.viewDetailCompetencia.textContent = event.title;
+        this.viewDetailInstructor.textContent = event.instructor;
+        this.viewDetailInicio.textContent = event.start;
+        this.viewDetailFin.textContent = event.end || 'N/A';
 
-        // Seleccionar nuevo
-        cardElement.classList.add('selected');
-        cardElement.querySelector('input[type="radio"]').checked = true;
-        this.selectedInstructor = instructorId;
+        this.btnEliminar.onclick = () => this.confirmarEliminar(event.id);
 
-        // Habilitar botón guardar
-        this.btnGuardarAsignacion.disabled = false;
+        this.viewModal.show();
     }
 
     async guardarAsignacion() {
-        if (!this.selectedInstructor || !this.competenciaSelect.value || !this.ambienteSelect.value) {
-            this.showNotification('Complete todos los campos requeridos', 'warning');
-            return;
-        }
+        const formData = new FormData(this.createForm);
+        const fechaIni = `${formData.get('fecha_inicio')} ${formData.get('hora_inicio')}:00`;
+        const fechaFin = `${formData.get('fecha_fin')} ${formData.get('hora_fin')}:00`;
 
-        const formData = new FormData();
+        formData.set('fecha_inicio', fechaIni);
+        formData.set('fecha_fin', fechaFin);
         formData.append('controller', 'asignacion');
         formData.append('action', 'store');
-        formData.append('ficha_id', this.fichaActual.fich_id);
-        formData.append('instructor_id', this.selectedInstructor);
-        formData.append('competencia_id', this.competenciaSelect.value);
-        formData.append('ambiente_id', this.ambienteSelect.value);
-
-        // Combinar fecha con horas
-        const fechaInicio = new Date(this.selectedDate);
-        const [horaIni, minIni] = this.horaInicio.value.split(':');
-        fechaInicio.setHours(horaIni, minIni, 0);
-
-        const fechaFin = new Date(this.selectedDate);
-        const [horaFin, minFin] = this.horaFin.value.split(':');
-        fechaFin.setHours(horaFin, minFin, 0);
-
-        formData.append('fecha_inicio', fechaInicio.toISOString());
-        formData.append('fecha_fin', fechaFin.toISOString());
 
         try {
             const response = await fetch('../../routing.php', {
@@ -399,32 +349,31 @@ class AsignacionCalendario {
 
             const result = await response.json();
 
-            if (result.error) {
-                throw new Error(result.error);
+            if (result.status === 'success') {
+                this.showNotification(result.message, 'success');
+                this.createModal.hide();
+                this.renderCalendar();
+            } else {
+                this.showNotification(result.message || 'Error al guardar', 'error');
             }
-
-            this.showNotification('Asignación creada correctamente', 'success');
-            this.closeAsignacionModal();
-            await this.cargarAsignaciones();
-            this.renderCalendario();
         } catch (error) {
-            console.error('Error guardando asignación:', error);
-            this.showNotification(error.message, 'error');
+            console.error('Error guardando:', error);
+            this.showNotification('Error de conexión', 'error');
         }
     }
 
-    async confirmarEliminarAsignacion(asigId) {
-        if (confirm('¿Está seguro de que desea eliminar esta asignación?')) {
-            await this.eliminarAsignacion(asigId);
+    confirmarEliminar(id) {
+        if (confirm('¿Está seguro de eliminar esta asignación?')) {
+            this.eliminarAsignacion(id);
         }
     }
 
-    async eliminarAsignacion(asigId) {
+    async eliminarAsignacion(id) {
         try {
             const formData = new FormData();
             formData.append('controller', 'asignacion');
             formData.append('action', 'destroy');
-            formData.append('id', asigId);
+            formData.append('id', id);
 
             const response = await fetch('../../routing.php', {
                 method: 'POST',
@@ -433,16 +382,15 @@ class AsignacionCalendario {
 
             const result = await response.json();
 
-            if (result.error) {
-                throw new Error(result.error);
+            if (!result.error) {
+                this.showNotification('Asignación eliminada', 'success');
+                this.viewModal.hide();
+                this.renderCalendar();
+            } else {
+                this.showNotification(result.error, 'error');
             }
-
-            this.showNotification('Asignación eliminada correctamente', 'success');
-            await this.cargarAsignaciones();
-            this.renderCalendario();
         } catch (error) {
-            console.error('Error eliminando asignación:', error);
-            this.showNotification(error.message, 'error');
+            console.error('Error eliminando:', error);
         }
     }
 
@@ -455,11 +403,6 @@ class AsignacionCalendario {
     }
 }
 
-// Initialize
-let asignacionCalendario;
 document.addEventListener('DOMContentLoaded', () => {
-    asignacionCalendario = new AsignacionCalendario();
+    new AsignacionCalendario();
 });
-
-// Global functions
-window.closeAsignacionModal = () => asignacionCalendario.closeAsignacionModal();

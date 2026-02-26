@@ -4,15 +4,17 @@ class AmbienteModel
 {
     private $amb_id;
     private $amb_nombre;
-    private $sede_sede_id;
+    private $tipo_ambiente;
+    private $SEDE_sede_id;
 
     private $db;
 
-    public function __construct($amb_id = null, $amb_nombre = null, $sede_sede_id = null)
+    public function __construct($amb_id = null, $amb_nombre = null, $SEDE_sede_id = null, $tipo_ambiente = 'Convencional')
     {
         if ($amb_id !== null) $this->setAmbId($amb_id);
         if ($amb_nombre !== null) $this->setAmbnombre($amb_nombre);
-        if ($sede_sede_id !== null) $this->setSedeSedeId($sede_sede_id);
+        if ($SEDE_sede_id !== null) $this->setSedeSedeId($SEDE_sede_id);
+        $this->tipo_ambiente = $tipo_ambiente;
         $this->db = Conexion::getConnect();
     }
     //getters 
@@ -25,9 +27,13 @@ class AmbienteModel
     {
         return $this->amb_nombre;
     }
+    public function getTipoAmbiente()
+    {
+        return $this->tipo_ambiente;
+    }
     public function getSedeSedeId()
     {
-        return $this->sede_sede_id;
+        return $this->SEDE_sede_id;
     }
 
     //setters 
@@ -39,32 +45,34 @@ class AmbienteModel
     {
         $this->amb_nombre = $amb_nombre;
     }
-    public function setSedeSedeId($sede_sede_id)
+    public function setTipoAmbiente($tipo_ambiente)
     {
-        $this->sede_sede_id = $sede_sede_id;
+        $this->tipo_ambiente = $tipo_ambiente;
+    }
+    public function setSedeSedeId($SEDE_sede_id)
+    {
+        $this->SEDE_sede_id = $SEDE_sede_id;
     }
     //crud
     public function create()
     {
-        // amb_id es VARCHAR(5) y PK, debe ser proporcionado
-        $query = "INSERT INTO ambiente (amb_id, amb_nombre, sede_sede_id) VALUES (:amb_id, :amb_nombre, :sede)";
+        $query = "INSERT INTO ambiente (amb_id, amb_nombre, tipo_ambiente, SEDE_sede_id) VALUES (:amb_id, :amb_nombre, :tipo_ambiente, :sede)";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':amb_id', $this->amb_id);
         $stmt->bindParam(':amb_nombre', $this->amb_nombre);
-        $stmt->bindParam(':sede', $this->sede_sede_id);
+        $stmt->bindParam(':tipo_ambiente', $this->tipo_ambiente);
+        $stmt->bindParam(':sede', $this->SEDE_sede_id);
         $stmt->execute();
-        return $this->amb_id; // Retornamos el ID insertado
+        return $this->amb_id;
     }
     public function read()
     {
         $sql = "SELECT a.*, s.sede_nombre 
                 FROM ambiente a 
-                INNER JOIN sede s ON a.sede_sede_id = s.sede_id 
-                WHERE a.sede_sede_id = :sede";
-        // Nota: El método read() original filtraba por sede_id, lo mantengo así aunque el nombre sugiera leer uno solo.
-        // Si se quiere leer por ID, se usa readById
+                INNER JOIN sede s ON a.SEDE_sede_id = s.sede_id 
+                WHERE a.SEDE_sede_id = :sede";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':sede' => $this->sede_sede_id]);
+        $stmt->execute([':sede' => $this->SEDE_sede_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -72,7 +80,7 @@ class AmbienteModel
     {
         $sql = "SELECT a.*, s.sede_nombre 
                 FROM ambiente a 
-                INNER JOIN sede s ON a.sede_sede_id = s.sede_id
+                INNER JOIN sede s ON a.SEDE_sede_id = s.sede_id
                 ORDER BY a.amb_nombre ASC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
@@ -83,7 +91,7 @@ class AmbienteModel
     {
         $sql = "SELECT a.*, s.sede_nombre 
                 FROM ambiente a 
-                INNER JOIN sede s ON a.sede_sede_id = s.sede_id 
+                INNER JOIN sede s ON a.SEDE_sede_id = s.sede_id 
                 WHERE a.amb_id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
@@ -91,11 +99,11 @@ class AmbienteModel
     }
     public function update()
     {
-        // No actualizamos la PK amb_id, usamos la actual para buscar
-        $query = "UPDATE ambiente SET amb_nombre = :amb_nombre, sede_sede_id = :sede WHERE amb_id = :id";
+        $query = "UPDATE ambiente SET amb_nombre = :amb_nombre, tipo_ambiente = :tipo_ambiente, SEDE_sede_id = :sede WHERE amb_id = :id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':amb_nombre', $this->amb_nombre);
-        $stmt->bindParam(':sede', $this->sede_sede_id);
+        $stmt->bindParam(':tipo_ambiente', $this->tipo_ambiente);
+        $stmt->bindParam(':sede', $this->SEDE_sede_id);
         $stmt->bindParam(':id', $this->amb_id);
         $stmt->execute();
         return $stmt;

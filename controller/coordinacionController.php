@@ -75,7 +75,6 @@ class CoordinacionController
             $centro_id = $_POST['centro_formacion_cent_id'] ?? null;
             $nombre_coordinador = $_POST['coord_nombre_coordinador'] ?? null;
             $correo = $_POST['coord_correo'] ?? null;
-            $password = $_POST['coord_password'] ?? null;
 
             if (!$descripcion || !$centro_id || !$nombre_coordinador) {
                 $this->sendResponse(['error' => 'Faltan campos obligatorios'], 400);
@@ -86,7 +85,6 @@ class CoordinacionController
             $this->model->setCentroFormacionCentId($centro_id);
             $this->model->setCoordNombreCoordinador($nombre_coordinador);
             $this->model->setCoordCorreo($correo);
-            $this->model->setCoordPassword($password);
 
             $id = $this->model->create();
 
@@ -111,7 +109,6 @@ class CoordinacionController
             $centro_id = $_POST['centro_formacion_cent_id'] ?? null;
             $nombre_coordinador = $_POST['coord_nombre_coordinador'] ?? null;
             $correo = $_POST['coord_correo'] ?? null;
-            $password = $_POST['coord_password'] ?? null;
 
             if (!$id || !$descripcion || !$centro_id || !$nombre_coordinador) {
                 $this->sendResponse(['error' => 'Faltan campos obligatorios'], 400);
@@ -123,7 +120,6 @@ class CoordinacionController
             $this->model->setCentroFormacionCentId($centro_id);
             $this->model->setCoordNombreCoordinador($nombre_coordinador);
             $this->model->setCoordCorreo($correo);
-            $this->model->setCoordPassword($password);
 
             if ($this->model->update()) {
                 $this->sendResponse(['message' => 'Coordinación actualizada correctamente']);

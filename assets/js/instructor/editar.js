@@ -6,9 +6,10 @@ class InstructorEdit {
         this.init();
     }
 
-    init() {
+    async init() {
         this.bindEvents();
         this.setupValidation();
+        await this.loadProgramas();
         this.loadInstructorData();
     }
 
@@ -49,6 +50,70 @@ class InstructorEdit {
         };
     }
 
+    async loadProgramas() {
+        try {
+            const response = await fetch('../../routing.php?controller=instructor&action=getProgramas');
+            const programas = await response.json();
+
+            const select = document.getElementById('intruProgSelect');
+            if (select && !programas.error) {
+                programas.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p.prog_codigo;
+                    option.textContent = p.prog_denominacion;
+                    select.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error('Error cargando programas:', error);
+        }
+    }
+
+    async loadCompetenciasForPrograma(selectedCompetencias = []) {
+        const programaId = document.getElementById('intruProgSelect').value;
+        const container = document.getElementById('compContainer');
+        const listContainer = document.getElementById('compList');
+
+        if (!programaId) {
+            container.style.display = 'none';
+            return;
+        }
+
+        try {
+            listContainer.innerHTML = '<div class="text-gray-500 text-center py-4 text-sm col-span-2">Cargando competencias...</div>';
+            container.style.display = 'block';
+
+            // Fetch to dedicated instructor action to get competencies for a program
+            const response = await fetch(`../../routing.php?controller=instructor&action=getCompetenciasInstructorPrograma&programa_id=${programaId}`);
+
+            const competencias = await response.json();
+
+            listContainer.innerHTML = '';
+
+            if (!competencias || competencias.length === 0 || competencias.error) {
+                listContainer.innerHTML = '<div class="text-orange-500 text-sm text-center py-2 col-span-2">Este programa no tiene competencias asociadas.</div>';
+                return;
+            }
+
+            // Create checkboxes
+            competencias.forEach(comp => {
+                // Determine if this competency was previously selected
+                const isChecked = selectedCompetencias.includes(comp.id) ? 'checked' : '';
+                const div = document.createElement('div');
+                div.className = 'flex items-center p-2 hover:bg-white rounded border border-transparent hover:border-gray-200 transition-colors cursor-pointer';
+                div.innerHTML = `
+                    <input type="checkbox" id="comp_${comp.id}" name="competencias[]" value="${comp.id}" class="w-4 h-4 text-sena-green bg-white border-gray-300 rounded focus:ring-sena-green cursor-pointer" ${isChecked}>
+                    <label for="comp_${comp.id}" class="ml-2 text-sm font-medium text-gray-700 w-full cursor-pointer leading-tight">${comp.nombre}</label>
+                `;
+                listContainer.appendChild(div);
+            });
+
+        } catch (error) {
+            console.error('Error loading competencies:', error);
+            listContainer.innerHTML = `<span class="text-red-500 text-sm col-span-2">Error cargando competencias.</span>`;
+        }
+    }
+
     async loadInstructorData() {
         if (!this.instructorId) {
             this.showPageError('ID de instructor no válido');
@@ -76,12 +141,32 @@ class InstructorEdit {
     }
 
     populateForm(data) {
-        ['inst_id', 'inst_nombre', 'inst_apellidos', 'inst_correo', 'inst_telefono'].forEach(field => {
-            const input = document.getElementById(field);
-            if (input && data[field]) {
-                input.value = data[field];
+        // Map HTML element IDs to database field names
+        const fieldMapping = {
+            'inst_id': 'inst_id',
+            'inst_nombre': 'inst_nombres', // Match DB field 'inst_nombres'
+            'inst_apellidos': 'inst_apellidos',
+            'inst_correo': 'inst_correo',
+            'inst_telefono': 'inst_telefono'
+        };
+
+        Object.keys(fieldMapping).forEach(elementId => {
+            const input = document.getElementById(elementId);
+            const dbField = fieldMapping[elementId];
+            if (input && data[dbField]) {
+                input.value = data[dbField];
             }
         });
+
+        if (data.especialidades && data.especialidades.length > 0) {
+            const programaId = data.especialidades[0].programa_id;
+            const select = document.getElementById('intruProgSelect');
+            if (select) {
+                select.value = programaId;
+                const selectedCompetencias = data.especialidades.map(esp => esp.comp_id);
+                this.loadCompetenciasForPrograma(selectedCompetencias);
+            }
+        }
     }
 
     showForm() {
@@ -118,6 +203,16 @@ class InstructorEdit {
             `;
 
             const formData = new FormData(this.form);
+
+            // Append program and competencies (Especialidades)
+            const programaId = document.getElementById('intruProgSelect').value;
+            if (programaId) {
+                formData.append('programa_id', programaId);
+                const checkboxes = document.querySelectorAll('input[name="competencias[]"]:checked');
+                const competenciasIds = Array.from(checkboxes).map(cb => cb.value);
+                formData.append('competencias', JSON.stringify(competenciasIds));
+            }
+
             formData.append('controller', 'instructor');
             formData.append('action', 'update');
             formData.append('inst_id', this.instructorId);
@@ -241,5 +336,5 @@ class InstructorEdit {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    new InstructorEdit();
+    window.instructorView = new InstructorEdit();
 });

@@ -10,7 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const centro = await response.json();
 
             if (centro) {
-                document.getElementById('cent_nombre').value = centro.cent_nombre;
+                document.getElementById('cent_nombre').value = centro.cent_nombre || '';
+                if (centro.cent_correo) {
+                    document.getElementById('cent_correo').value = centro.cent_correo;
+                }
             }
         } catch (error) {
             console.error('Error loading centro:', error);

@@ -1,0 +1,7 @@
+2026-02-24 05:17:01 - SQLSTATE[23505]: Unique violation: 7 ERROR:  llave duplicada viola restricción de unicidad «instructor_pkey»
+DETAIL:  Ya existe la llave (inst_id)=(3).
+#0 C:\xampp\htdocs\MVC\model\InstructorModel.php(57): PDOStatement->execute()
+#1 C:\xampp\htdocs\MVC\controller\instructorController.php(74): InstructorModel->create()
+#2 C:\xampp\htdocs\MVC\routing.php(146): InstructorController->store()
+#3 C:\xampp\htdocs\MVC\routing.php(33): call('instructor', 'store')
+#4 {main}

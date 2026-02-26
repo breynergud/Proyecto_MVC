@@ -37,7 +37,7 @@ class VerTitulo {
     }
 
     bindEvents() {
-        const deleteBtn = document.getElementById('deleteTituloBtn');
+        const deleteBtn = document.getElementById('deleteBtn');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', () => this.openDeleteModal());
         }

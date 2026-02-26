@@ -40,9 +40,13 @@ require_once '../layouts/sidebar-green.php';
 
                 <form id="crearCentroForm" class="modern-form">
                     <div class="form-grid">
-                        <div class="form-group full-width">
+                        <div class="form-group">
                             <label for="cent_nombre" class="form-label">Nombre del Centro *</label>
-                            <input type="text" id="cent_nombre" name="cent_nombre" class="form-input" placeholder="Ej: Centro de Gestión de Mercados, Logística y Tecnologías de la Información" required>
+                            <input type="text" id="cent_nombre" name="cent_nombre" class="form-input" placeholder="Ej: Centro de Gestión de Mercados..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cent_correo" class="form-label">Correo Electrónico *</label>
+                            <input type="email" id="cent_correo" name="cent_correo" class="form-input" placeholder="Ej: centro@sena.edu.co" required>
                         </div>
                     </div>
 

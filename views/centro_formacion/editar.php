@@ -48,9 +48,13 @@ if (!$id) {
                     <input type="hidden" id="cent_id" name="cent_id" value="<?php echo htmlspecialchars($id); ?>">
                     
                     <div class="form-grid">
-                        <div class="form-group full-width">
+                        <div class="form-group">
                             <label for="cent_nombre" class="form-label">Nombre del Centro *</label>
                             <input type="text" id="cent_nombre" name="cent_nombre" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cent_correo" class="form-label">Correo Electrónico *</label>
+                            <input type="email" id="cent_correo" name="cent_correo" class="form-input" required>
                         </div>
                     </div>
 

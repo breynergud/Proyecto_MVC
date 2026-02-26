@@ -69,11 +69,9 @@ $id = $_GET['id'] ?? null;
                         <input type="text" id="prog_denominacion" name="prog_denominacion" class="form-input" required>
                     </div>
 
-                    <div class="form-group full-width">
+                    <div class="form-group full-width" style="display: none;">
                         <label for="tit_programa_titpro_id" class="form-label required">Título Académico</label>
-                        <select id="tit_programa_titpro_id" name="tit_programa_titpro_id" class="form-input" required>
-                            <option value="" disabled>Seleccione un título...</option>
-                        </select>
+                        <input type="hidden" id="tit_programa_titpro_id" name="tit_programa_titpro_id">
                     </div>
                 </div>
 

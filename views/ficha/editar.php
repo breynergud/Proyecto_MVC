@@ -44,9 +44,13 @@ $id = $_GET['id'] ?? null;
             </div>
 
             <form id="editarFichaForm" class="form-content">
-                <input type="hidden" name="fich_id" value="<?php echo htmlspecialchars($id); ?>">
-
                 <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="fich_id_display" class="form-label">Número de Ficha</label>
+                        <input type="text" id="fich_id_display" class="form-input" value="<?php echo htmlspecialchars($id); ?>" readonly disabled>
+                        <input type="hidden" name="fich_id" value="<?php echo htmlspecialchars($id); ?>">
+                    </div>
+
                     <div class="form-group full-width">
                         <label for="programa_prog_id" class="form-label required">Programa de Formación</label>
                         <select id="programa_prog_id" name="programa_prog_id" class="form-input" required>
@@ -77,6 +81,16 @@ $id = $_GET['id'] ?? null;
                         <select id="coordinacion_coord_id" name="coordinacion_coord_id" class="form-input" required>
                             <option value="" disabled>Seleccione coordinación...</option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fich_fecha_ini_lectiva" class="form-label required">Inicio Etapa Lectiva</label>
+                        <input type="date" id="fich_fecha_ini_lectiva" name="fich_fecha_ini_lectiva" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fich_fecha_fin_lectiva" class="form-label required">Fin Etapa Lectiva</label>
+                        <input type="date" id="fich_fecha_fin_lectiva" name="fich_fecha_fin_lectiva" class="form-input" required>
                     </div>
                 </div>
 

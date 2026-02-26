@@ -56,13 +56,15 @@ class CentroFormacionController
     {
         try {
             $nombre = $_POST['cent_nombre'] ?? null;
+            $correo = $_POST['cent_correo'] ?? null;
 
-            if (!$nombre) {
-                $this->sendResponse(['error' => 'El nombre del centro es requerido'], 400);
+            if (!$nombre || !$correo) {
+                $this->sendResponse(['error' => 'El nombre del centro y el correo son requeridos'], 400);
                 return;
             }
 
             $this->model->setCentNombre($nombre);
+            $this->model->setCentCorreo($correo);
             $id = $this->model->create();
 
             if ($id) {
@@ -83,14 +85,16 @@ class CentroFormacionController
         try {
             $id = $_POST['cent_id'] ?? null;
             $nombre = $_POST['cent_nombre'] ?? null;
+            $correo = $_POST['cent_correo'] ?? null;
 
-            if (!$id || !$nombre) {
+            if (!$id || !$nombre || !$correo) {
                 $this->sendResponse(['error' => 'Faltan campos obligatorios'], 400);
                 return;
             }
 
             $this->model->setCentId($id);
             $this->model->setCentNombre($nombre);
+            $this->model->setCentCorreo($correo);
 
             if ($this->model->update()) {
                 $this->sendResponse(['message' => 'Centro actualizado correctamente']);

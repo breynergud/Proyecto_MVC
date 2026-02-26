@@ -66,11 +66,9 @@ require_once '../layouts/sidebar-green.php';
                         <div class="form-help">Nombre completo tal como aparece en el registro calificado.</div>
                     </div>
 
-                    <div class="form-group full-width">
+                    <div class="form-group full-width" style="display: none;">
                         <label for="tit_programa_titpro_id" class="form-label required">Título Académico que Otorga</label>
-                        <select id="tit_programa_titpro_id" name="tit_programa_titpro_id" class="form-input" required>
-                            <option value="" disabled selected>Cargando títulos...</option>
-                        </select>
+                        <input type="hidden" id="tit_programa_titpro_id" name="tit_programa_titpro_id">
                         <div class="form-help">El título debe estar previamente registrado en el sistema.</div>
                     </div>
                 </div>

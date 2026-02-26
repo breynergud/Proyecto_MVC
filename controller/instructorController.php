@@ -5,6 +5,8 @@
  */
 
 require_once dirname(__DIR__) . '/model/InstructorModel.php';
+require_once dirname(__DIR__) . '/model/CompetenciaProgramaModel.php';
+
 
 class InstructorController
 {
@@ -42,7 +44,10 @@ class InstructorController
             return;
         }
 
-        $this->sendResponse($result[0]);
+        $instructor_data = $result[0];
+        $instructor_data['especialidades'] = $this->model->getEspecialidades($id);
+
+        $this->sendResponse($instructor_data);
     }
 
     /**
@@ -62,16 +67,54 @@ class InstructorController
             $this->model->setInstApellidos($_POST['inst_apellidos']);
             $this->model->setInstCorreo($_POST['inst_correo']);
             $this->model->setInstTelefono($_POST['inst_telefono'] ?? null);
+            
+            // Valores por defecto para campos obligatorios no presentes en el formulario
+            $this->model->setCentroFormacionCentId(1); // Centro por defecto
+            $this->model->setInstPassword(password_hash('admin123', PASSWORD_DEFAULT)); // Password por defecto: admin123 (hasheado)
+
+            // Iniciar transacción explícita
+            $db = Conexion::getConnect();
+            $db->beginTransaction();
 
             $id = $this->model->create();
 
             if ($id) {
+                // Guardar Especialidades si existen
+                $programa_id = $_POST['programa_id'] ?? null;
+                $competencias = isset($_POST['competencias']) ? json_decode($_POST['competencias'], true) : [];
+                
+                if ($programa_id && !empty($competencias)) {
+                    $this->model->saveEspecialidades($id, $programa_id, $competencias);
+                }
+
+                $db->commit();
                 $this->sendResponse(['message' => 'Instructor creado correctamente', 'id' => $id], 201);
             } else {
+                $db->rollBack();
                 $this->sendResponse(['error' => 'No se pudo crear el instructor'], 500);
             }
         } catch (Exception $e) {
+            if (isset($db)) {
+                $db->rollBack();
+            }
+            // Log de error detallado
+            file_put_contents(__DIR__ . '/instructor_error.log', date('Y-m-d H:i:s') . " - " . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n", FILE_APPEND);
             $this->sendResponse(['error' => 'Error al crear el instructor', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Obtener listado de Programas para Especialidades
+     */
+    public function getProgramas()
+    {
+        try {
+            require_once dirname(__DIR__) . '/model/ProgramaModel.php';
+            $programaModel = new ProgramaModel();
+            $programas = $programaModel->readAll();
+            $this->sendResponse($programas);
+        } catch (Exception $e) {
+            $this->sendResponse(['error' => 'Error', 'details' => $e->getMessage()], 500);
         }
     }
 
@@ -99,13 +142,32 @@ class InstructorController
             $this->model->setInstApellidos($_POST['inst_apellidos']);
             $this->model->setInstCorreo($_POST['inst_correo']);
             $this->model->setInstTelefono($_POST['inst_telefono'] ?? null);
+            $this->model->setCentroFormacionCentId(1); // Mantener centro por defecto
+
+            // Iniciar transacción explícita
+            $db = Conexion::getConnect();
+            $db->beginTransaction();
 
             if ($this->model->update()) {
+                // Guardar Especialidades si existen
+                $programa_id = $_POST['programa_id'] ?? null;
+                $competencias = isset($_POST['competencias']) ? json_decode($_POST['competencias'], true) : [];
+                
+                $this->model->deleteEspecialidades($id);
+                if ($programa_id && !empty($competencias)) {
+                    $this->model->saveEspecialidades($id, $programa_id, $competencias);
+                }
+
+                $db->commit();
                 $this->sendResponse(['message' => 'Instructor actualizado correctamente']);
             } else {
+                $db->rollBack();
                 $this->sendResponse(['error' => 'No se pudo actualizar el instructor'], 500);
             }
         } catch (Exception $e) {
+            if (isset($db)) {
+                $db->rollBack();
+            }
             $this->sendResponse(['error' => 'Error al actualizar el instructor', 'details' => $e->getMessage()], 500);
         }
     }
@@ -137,6 +199,36 @@ class InstructorController
             } else {
                 $this->sendResponse(['error' => 'Error al eliminar el instructor', 'details' => $e->getMessage()], 500);
             }
+        }
+    }
+
+    /**
+     * Obtener competencias asociadas a un programa específico (para el filtro de especialidades)
+     */
+    public function getCompetenciasInstructorPrograma($programa_id = null)
+    {
+        $programa_id = $programa_id ?? $_POST['programa_id'] ?? $_GET['programa_id'] ?? null;
+
+        if (!$programa_id) {
+            $this->sendResponse(['error' => 'ID de programa requerido'], 400);
+            return;
+        }
+
+        try {
+            $compProgModel = new CompetenciaProgramaModel();
+            $competencias = $compProgModel->getCompetenciasByPrograma($programa_id);
+
+            // Mapear para que coincida con lo que espera el JS (id, nombre)
+            $result = array_map(function ($c) {
+                return [
+                    'id' => $c['comp_id'],
+                    'nombre' => $c['comp_nombre_corto']
+                ];
+            }, $competencias);
+
+            $this->sendResponse($result);
+        } catch (Exception $e) {
+            $this->sendResponse(['error' => 'Error al obtener competencias', 'details' => $e->getMessage()], 500);
         }
     }
 

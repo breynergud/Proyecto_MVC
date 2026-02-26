@@ -1,3 +1,34 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../auth/login.php');
+    exit;
+}
+
+// Estricta separación de roles: módulos permitidos por cada rol
+$rolePermissions = [
+    'centro' => ['dashboard', 'sede', 'ambiente', 'programa', 'instructor', 'competencia', 'coordinacion', 'centro_formacion', 'titulo_programa'],
+    'coordinador' => ['dashboard', 'programa', 'ficha', 'instructor', 'asignacion'],
+    'instructor' => ['dashboard', 'asignacion']
+];
+
+$userRole = $_SESSION['user_role'] ?? '';
+$currentPath = $_SERVER['PHP_SELF'];
+$pathParts = explode('/', $currentPath);
+// Detectar el módulo actual basado en la estructura de carpetas de /views/
+$viewIndex = array_search('views', $pathParts);
+$currentModule = ($viewIndex !== false && isset($pathParts[$viewIndex + 1])) ? $pathParts[$viewIndex + 1] : '';
+
+// Validar permisos de acceso al módulo (exceptuando layouts y auth)
+if ($currentModule && !in_array($currentModule, ['auth', 'layouts'])) {
+    if (isset($rolePermissions[$userRole]) && !in_array($currentModule, $rolePermissions[$userRole])) {
+        header('Location: ../dashboard/index.php?error=unauthorized');
+        exit;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 

@@ -58,13 +58,8 @@ require_once '../layouts/sidebar-green.php';
                         </div>
 
                         <div class="form-group">
-                            <label for="coord_correo" class="form-label">Correo Electrónico</label>
-                            <input type="email" id="coord_correo" name="coord_correo" class="form-input" placeholder="usuario@sena.edu.co">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="coord_password" class="form-label">Contraseña</label>
-                            <input type="password" id="coord_password" name="coord_password" class="form-input" placeholder="********">
+                            <label for="coord_correo" class="form-label">Correo Electrónico *</label>
+                            <input type="email" id="coord_correo" name="coord_correo" class="form-input" placeholder="usuario@sena.edu.co" required>
                         </div>
                     </div>
 

@@ -38,8 +38,9 @@ require_once '../layouts/sidebar-green.php';
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th class="w-20">ID</th>
+                        <th class="w-10">ID</th>
                         <th>Nombre del Título</th>
+                        <th class="w-20 text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="titulosTableBody">

@@ -69,7 +69,7 @@ class FichaController
             $conn = Conexion::getConnect();
             $query = "SELECT c.coord_id, c.coord_nombre_coordinador as coord_nombre, cf.cent_nombre
                       FROM coordinacion c
-                      INNER JOIN centro_formacion cf ON c.centro_formacion_cent_id = cf.cent_id
+                      INNER JOIN centro_formacion cf ON c.CENTRO_FORMACION_cent_id = cf.cent_id
                       ORDER BY c.coord_nombre_coordinador";
             $stmt = $conn->prepare($query);
             $stmt->execute();
@@ -107,6 +107,7 @@ class FichaController
     public function store()
     {
         try {
+            $fich_id = $_POST['fich_id'] ?? null;
             $programa_id = $_POST['programa_prog_id'] ?? null;
             $instructor_id = $_POST['instructor_inst_id'] ?? null; // Front might still send this name
             $jornada = $_POST['fich_jornada'] ?? null;
@@ -114,14 +115,12 @@ class FichaController
             $fecha_ini = $_POST['fich_fecha_ini_lectiva'] ?? null;
             $fecha_fin = $_POST['fich_fecha_fin_lectiva'] ?? null;
 
-            if (!$programa_id || !$instructor_id || !$jornada || !$coordinacion_id) {
-                // Fechas podrían no ser obligatorias estrictamente según la BD (si son nullables), 
-                // pero asumiremos que son necesarias si el modelo lo requiere.
-                // En el SQL no dicen NOT NULL explícitamente pero suelen serlo.
-                $this->sendResponse(['error' => 'Faltan campos obligatorios'], 400);
+            if (!$fich_id || !$programa_id || !$instructor_id || !$jornada || !$coordinacion_id || !$fecha_ini || !$fecha_fin) {
+                $this->sendResponse(['error' => 'Faltan campos obligatorios (incluyendo fechas)'], 400);
                 return;
             }
 
+            $this->model->setFichId($fich_id);
             $this->model->setProgramaProgId($programa_id);
             $this->model->setInstructorInstIdLider($instructor_id);
             $this->model->setFichJornada($jornada);
@@ -134,10 +133,10 @@ class FichaController
             if ($id) {
                 $this->sendResponse(['message' => 'Ficha creada correctamente', 'id' => $id], 201);
             } else {
-                $this->sendResponse(['error' => 'No se pudo crear la ficha'], 500);
+                $this->sendResponse(['error' => 'No se pudo crear la ficha (el modelo retornó false)'], 500);
             }
         } catch (Exception $e) {
-            $this->sendResponse(['error' => 'Error al crear la ficha', 'details' => $e->getMessage()], 500);
+            $this->sendResponse(['error' => 'Error BD: ' . $e->getMessage()], 500);
         }
     }
 
@@ -155,8 +154,8 @@ class FichaController
             $fecha_ini = $_POST['fich_fecha_ini_lectiva'] ?? null;
             $fecha_fin = $_POST['fich_fecha_fin_lectiva'] ?? null;
 
-            if (!$id || !$programa_id || !$instructor_id || !$jornada || !$coordinacion_id) {
-                $this->sendResponse(['error' => 'Faltan campos obligatorios'], 400);
+            if (!$id || !$programa_id || !$instructor_id || !$jornada || !$coordinacion_id || !$fecha_ini || !$fecha_fin) {
+                $this->sendResponse(['error' => 'Faltan campos obligatorios (incluyendo fechas)'], 400);
                 return;
             }
 

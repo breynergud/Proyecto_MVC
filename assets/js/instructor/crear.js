@@ -8,9 +8,70 @@ class InstructorForm {
     init() {
         this.bindEvents();
         this.setupValidation();
+        this.loadProgramas();
     }
 
+    async loadProgramas() {
+        try {
+            const response = await fetch('../../routing.php?controller=instructor&action=getProgramas');
+            const programas = await response.json();
 
+            const select = document.getElementById('intruProgSelect');
+            if (select && !programas.error) {
+                programas.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p.prog_codigo;
+                    option.textContent = p.prog_denominacion;
+                    select.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error('Error cargando programas:', error);
+        }
+    }
+
+    async loadCompetenciasForPrograma() {
+        const programaId = document.getElementById('intruProgSelect').value;
+        const container = document.getElementById('compContainer');
+        const listContainer = document.getElementById('compList');
+
+        if (!programaId) {
+            container.style.display = 'none';
+            return;
+        }
+
+        try {
+            listContainer.innerHTML = '<div class="text-gray-500 text-center py-4 text-sm col-span-2">Cargando competencias...</div>';
+            container.style.display = 'block';
+
+            // Fetch to dedicated instructor action to get competencies for a program
+            const response = await fetch(`../../routing.php?controller=instructor&action=getCompetenciasInstructorPrograma&programa_id=${programaId}`);
+
+            const competencias = await response.json();
+
+            listContainer.innerHTML = '';
+
+            if (!competencias || competencias.length === 0 || competencias.error) {
+                listContainer.innerHTML = '<div class="text-orange-500 text-sm text-center py-2 col-span-2">Este programa no tiene competencias asociadas.</div>';
+                return;
+            }
+
+            // Create checkboxes
+            competencias.forEach(comp => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center p-2 hover:bg-white rounded border border-transparent hover:border-gray-200 transition-colors cursor-pointer';
+                div.innerHTML = `
+                    <input type="checkbox" id="comp_${comp.id}" name="competencias[]" value="${comp.id}" class="w-4 h-4 text-sena-green bg-white border-gray-300 rounded focus:ring-sena-green cursor-pointer">
+                    <label for="comp_${comp.id}" class="ml-2 text-sm font-medium text-gray-700 w-full cursor-pointer leading-tight">${comp.nombre}</label>
+                `;
+                listContainer.appendChild(div);
+            });
+
+        } catch (error) {
+            console.error('Error loading competencies:', error);
+            listContainer.innerHTML = `<span class="text-red-500 text-sm col-span-2">Error cargando competencias.</span>`;
+        }
+    }
 
     bindEvents() {
         if (this.form) {
@@ -60,6 +121,15 @@ class InstructorForm {
             `;
 
             const formData = new FormData(this.form);
+
+            // Append program and competencies (Especialidades)
+            const programaId = document.getElementById('intruProgSelect').value;
+            if (programaId) {
+                formData.append('programa_id', programaId);
+                const checkboxes = document.querySelectorAll('input[name="competencias[]"]:checked');
+                const competenciasIds = Array.from(checkboxes).map(cb => cb.value);
+                formData.append('competencias', JSON.stringify(competenciasIds));
+            }
 
             // Append controller and action
             formData.append('controller', 'instructor');
@@ -185,5 +255,5 @@ class InstructorForm {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    new InstructorForm();
+    window.instructorView = new InstructorForm();
 });

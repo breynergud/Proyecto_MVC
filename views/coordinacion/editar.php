@@ -66,16 +66,8 @@ if (!$id) {
                         </div>
 
                         <div class="form-group">
-                            <label for="coord_correo" class="form-label">Correo Electrónico</label>
-                            <input type="email" id="coord_correo" name="coord_correo" class="form-input">
-                        </div>
-
-                        <div class="form-group text-sm text-gray-500 italic mt-2">
-                             La contraseña se mantendrá igual si se deja en blanco (implementación base).
-                        </div>
-                        <div class="form-group">
-                            <label for="coord_password" class="form-label">Nueva Contraseña (opcional)</label>
-                            <input type="password" id="coord_password" name="coord_password" class="form-input" placeholder="Odejar en blanco">
+                            <label for="coord_correo" class="form-label">Correo Electrónico *</label>
+                            <input type="email" id="coord_correo" name="coord_correo" class="form-input" required>
                         </div>
                     </div>
 
